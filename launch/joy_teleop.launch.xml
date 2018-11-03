@@ -1,0 +1,16 @@
+<!-- -*- mode: XML -*- -->
+<launch>
+  <arg name ="headless" default="0"/>
+  <arg name="joy_teleop_config"
+       default="$(find racecar)/config/common/joy_teleop.yaml" />
+
+  <rosparam file="$(arg joy_teleop_config)" command="load" />
+
+  <group unless="$(arg headless)">
+    <node pkg="mushr_sim" type="keyboard_teleop.py" name="keyboard_teleop" output="screen" />
+  </group>
+  <node pkg="mushr_sim" type="joy_sim.py" name="joy_node"/>
+
+  <node pkg="racecar" type="joy_teleop.py" name="joy_teleop" />
+
+</launch>
