@@ -31,8 +31,8 @@ vesc_driver:
   current_max: 20.0
   brake_min: -20000.0
   brake_max: 200000.0
-  speed_min: -3250
-  speed_max: 3250
+  speed_min: -10500
+  speed_max: 10500
   position_min: 0.0
   position_max: 0.0
   servo_min: 0.15
