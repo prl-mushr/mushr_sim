@@ -5,9 +5,7 @@
   <group ns="vesc">
     <!-- joystick node -->
 
-    <include file="$(find mushr_sim)/launch/joy_teleop.launch.xml" >
-        <arg name="headless" value="$(arg headless)"/>
-    </include>
+    <include file="$(find mushr_sim)/launch/joy_teleop.launch.xml" unless="$(arg headless)" />
 
     <!-- Spawn MUXs -->
     <include file="$(find racecar)/launch/includes/common/mux.launch" />
