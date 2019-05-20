@@ -1,0 +1,27 @@
+<!-- -*- mode: XML -*- -->
+<launch>
+  <!-- Set to 1 if you want to run headless. Keyboard control will be disabled-->
+  <arg name="headless" value = "0"/>
+  <group ns="vesc">
+    <!-- joystick node -->
+
+    <include file="$(find mushr_sim)/launch/joy_teleop.launch.xml" unless="$(arg headless)" />
+
+    <!-- Spawn MUXs -->
+    <include file="$(find racecar)/launch/includes/common/mux.launch" />
+
+    <!-- Start electronic speed controller driver -->
+    <include file="$(find mushr_sim)/launch/vesc.launch.xml" />
+
+  </group>
+
+  <!-- Launch sensors -->
+  <include file="$(find mushr_sim)/launch/sensors.launch.xml" />
+
+  <!-- static transforms, e.g. base_link to imu -->
+  <include file="$(find mushr_sim)/launch/static_transforms.launch.xml" />
+
+  <!-- urdf xml robot description loaded on the Parameter Server, converting the xacro into a proper urdf file-->
+  <param name="robot_description" command="$(find xacro)/xacro '$(find racecar_description)/urdf/racecar.xacro'" />
+
+</launch>
