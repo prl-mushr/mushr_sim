@@ -12,10 +12,10 @@
         <include file="$(find mushr_sim)/launch/keyboard_teleop.launch.xml" />
     </group>
 
-	<group ns="mux">
+    <group ns="mux">
         <!-- Spawn MUXs -->
         <include file="$(find ackermann_cmd_mux)/launch/mux.launch" />
-	</group>
+    </group>
 
     <!-- Launch sensors -->
     <include file="$(find mushr_sim)/launch/sensors.launch.xml" />
@@ -24,5 +24,5 @@
     <include file="$(find mushr_sim)/launch/static_transforms.launch.xml" />
 
     <!-- urdf xml robot description loaded on the Parameter Server, converting the xacro into a proper urdf file-->
-	<!-- <param name="robot_description" command="$(find xacro)/xacro '$(find racecar_description)/urdf/racecar.xacro'" /> -->
+    <!-- <param name="robot_description" command="$(find xacro)/xacro '$(find racecar_description)/urdf/racecar.xacro'" /> -->
 </launch>
