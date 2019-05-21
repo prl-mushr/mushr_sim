@@ -94,6 +94,7 @@ class SimCarPose:
         now = rospy.Time.now()
         if self.last_stamp is None:
             self.last_stamp = now
+
         dt = (now-self.last_stamp).to_sec()
 
         self.last_speed_lock.acquire()
@@ -111,28 +112,22 @@ class SimCarPose:
             dy = v * np.sin(self.cur_pose[2]) * dt
             dtheta = 0
         else:
-            beta = np.arctan(0.5 * np.tan(delta))
-            sin2beta = np.sin(2 * beta)
-            dtheta = ((v / self.CAR_LENGTH) * sin2beta) * dt
-            dx = (self.CAR_LENGTH / sin2beta) * (np.sin(self.cur_pose[2] + dtheta) - np.sin(self.cur_pose[2]))
-            dy = (self.CAR_LENGTH / sin2beta) * (-1 * np.cos(self.cur_pose[2] + dtheta) + np.cos(self.cur_pose[2]))
+            tandelta = np.tan(delta)
+            dtheta = ((v / self.CAR_LENGTH) * tandelta) * dt
+            dx = (self.CAR_LENGTH / tandelta) * (np.sin(self.cur_pose[2] + dtheta) - np.sin(self.cur_pose[2]))
+            dy = (self.CAR_LENGTH / tandelta) * (-1 * np.cos(self.cur_pose[2] + dtheta) + np.cos(self.cur_pose[2]))
 
 
         new_pose[0] += dx + np.random.normal(loc=self.FORWARD_OFFSET, scale=self.FORWARD_FIX_NOISE, size=1) + np.random.normal(loc=0.0, scale=np.abs(v)*self.FORWARD_SCALE_NOISE, size=1)
         new_pose[1] += dy + np.random.normal(loc=self.SIDE_OFFSET, scale=self.SIDE_FIX_NOISE, size=1) + np.random.normal(loc=0.0, scale=np.abs(v) * self.SIDE_SCALE_NOISE, size=1)
         new_pose[2] += dtheta + np.random.normal(loc=self.THETA_OFFSET, scale=self.THETA_FIX_NOISE, size=1)
 
-        while new_pose[2] > 2*np.pi:
-            new_pose[2] -= 2*np.pi
-
-        while new_pose[2] < 2*np.pi:
-            new_pose[2] += 2*np.pi
+        new_pose[2] = np.unwrap([new_pose[2]])[0]
 
         new_map_pose = utils.world_to_map(new_pose, self.map_info)
 
         # Only update cur_pose if new pose is in bounds
         if self.permissible_region[int(new_map_pose[1]+0.5), int(new_map_pose[0]+0.5)] == 1:
-
             self.cur_pose = np.array(new_pose)
 
         ps = PoseStamped()

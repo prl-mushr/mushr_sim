@@ -1,4 +1,3 @@
-
 laser_node:
   serial_port: /dev/lidar_hokuyo
   angle_min: -2.0892818331
