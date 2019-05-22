@@ -2,18 +2,18 @@
 
 import atexit
 import os
-import rospy
 import signal
-
-from Tkinter import Tk, Frame
 from threading import Lock
+from Tkinter import Frame, Tk
+
+import rospy
 from ackermann_msgs.msg import AckermannDriveStamped
 
-UP = 'w'
-LEFT = 'a'
-DOWN = 's'
-RIGHT = 'd'
-QUIT = 'q'
+UP = "w"
+LEFT = "a"
+DOWN = "s"
+RIGHT = "d"
+QUIT = "q"
 
 state = [False, False, False, False]
 state_lock = Lock()
@@ -58,6 +58,7 @@ def keydown(e):
             state[3] = True
             state[1] = False
 
+
 # Up -> linear.x = 1.0
 # Down -> linear.x = -1.0
 # Left ->  angular.z = 1.0
@@ -82,7 +83,7 @@ def publish_cb(_):
 
 
 def exit_func():
-    os.system('xset r on')
+    os.system("xset r on")
 
 
 def shutdown():
@@ -96,15 +97,15 @@ def main():
 
     global max_velocity
     global max_steering_angle
-    print rospy.resolve_name("~speed")
-    print rospy.resolve_name("~max_steering_angle")
     max_velocity = rospy.get_param("~speed", 2.0)
     max_steering_angle = rospy.get_param("~max_steering_angle", 0.34)
 
-    state_pub = rospy.Publisher('/mux/ackermann_cmd_mux/input/teleop', AckermannDriveStamped, queue_size=1)
+    state_pub = rospy.Publisher(
+        "/mux/ackermann_cmd_mux/input/teleop", AckermannDriveStamped, queue_size=1
+    )
     rospy.Timer(rospy.Duration(0.1), publish_cb)
     atexit.register(exit_func)
-    os.system('xset r off')
+    os.system("xset r off")
 
     root = Tk()
     frame = Frame(root, width=100, height=100)
@@ -112,11 +113,11 @@ def main():
     frame.bind("<KeyRelease>", keyup)
     frame.pack()
     frame.focus_set()
-    print 'Press %c to quit' % QUIT
+    print("Press %c to quit" % QUIT)
     root.mainloop()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     rospy.init_node("keyboard_teleop", disable_signals=True)
 
     signal.signal(signal.SIGINT, lambda s, f: shutdown())
