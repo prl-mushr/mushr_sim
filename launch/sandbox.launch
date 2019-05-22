@@ -2,9 +2,11 @@
 <launch>
   <!-- Set to 1 if you want to run headless. Keyboard control will be disabled-->
   <arg name="headless" value = "0"/>
+
   <include file="$(find mushr_sim)/launch/map_server.launch">
         <arg name="map" default="$(find mushr_control_ros)/maps/sandbox.yaml"/>
   </include>
+
   <group ns="vesc">
     <!-- joystick node -->
 
@@ -28,6 +30,4 @@
 
   <!-- urdf xml robot description loaded on the Parameter Server, converting the xacro into a proper urdf file-->
   <param name="robot_description" command="$(find xacro)/xacro '$(find racecar_description)/urdf/racecar.xacro'" />
-  
-
 </launch>
