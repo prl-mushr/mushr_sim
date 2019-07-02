@@ -23,6 +23,9 @@
     <!-- static transforms, e.g. base_link to imu -->
     <include file="$(find mushr_sim)/launch/static_transforms.launch.xml" />
 
-    <!-- urdf xml robot description loaded on the Parameter Server, converting the xacro into a proper urdf file-->
-    <!-- <param name="robot_description" command="$(find xacro)/xacro '$(find racecar_description)/urdf/racecar.xacro'" /> -->
+    <param name="robot_description"
+         textfile="$(find mushr_description)/robots/mushr_nano.urdf"/>
+
+    <include file="$(find mushr_base)/launch/includes/racecar_state.launch" />
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="state_publisher"/>
 </launch>
