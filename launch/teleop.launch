@@ -2,6 +2,7 @@
 <launch>
     <!-- Set to 1 if you want to run headless. Keyboard control will be disabled-->
     <arg name="headless" value = "0"/>
+    <arg name="racecar_version" default="racecar-uw-nano" />
 
     <group ns="vesc">
         <!-- Start electronic speed controller driver -->
@@ -20,11 +21,8 @@
     <!-- Launch sensors -->
     <include file="$(find mushr_sim)/launch/sensors.launch.xml" />
 
-    <!-- static transforms, e.g. base_link to imu -->
-    <include file="$(find mushr_sim)/launch/static_transforms.launch.xml" />
-
     <param name="robot_description"
-         textfile="$(find mushr_description)/robots/mushr_nano.urdf"/>
+         textfile="$(find mushr_description)/robots/$(arg racecar_version).urdf"/>
 
     <include file="$(find mushr_base)/launch/includes/racecar_state.launch" />
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="state_publisher"/>

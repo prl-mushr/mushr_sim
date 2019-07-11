@@ -42,8 +42,8 @@ class FakeURGNode:
 
         self.tl = tf.TransformListener()
         now = rospy.Time.now()
-        self.tl.waitForTransform("base_link", "laser", now, rospy.Duration(5.0))
-        position, orientation = self.tl.lookupTransform("base_link", "laser", now)
+        self.tl.waitForTransform("base_link", "laser_link", now, rospy.Duration(5.0))
+        position, orientation = self.tl.lookupTransform("base_link", "laser_link", now)
         self.x_offset = -1 * self.CAR_LENGTH / 2.0 + position[0]
 
         self.laser_pub = rospy.Publisher("/scan", LaserScan, queue_size=1)
