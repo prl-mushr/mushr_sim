@@ -49,7 +49,7 @@ class FakeURGNode:
         self.laser_pub = rospy.Publisher("/scan", LaserScan, queue_size=1)
 
         # Hack to wait for tfs to be available. self.tl.frame_exists doesn't sem to work
-        rospy.wait_for_message("/sim_car_pose/pose", PoseStamped)
+        rospy.wait_for_message("/car_pose", PoseStamped)
 
         self.update_timer = rospy.Timer(
             rospy.Duration.from_sec(1.0 / self.UPDATE_RATE), self.timer_cb
@@ -102,7 +102,7 @@ class FakeURGNode:
 
         now = rospy.Time.now()
         ls = LaserScan()
-        ls.header.frame_id = "laser"
+        ls.header.frame_id = "laser_link"
         ls.header.stamp = now
         ls.angle_increment = self.ANGLE_STEP
         ls.angle_min = self.ANGLE_MIN
@@ -114,7 +114,7 @@ class FakeURGNode:
         ranges = np.zeros(len(self.ANGLES) * 1, dtype=np.float32)
 
         ps1 = PoseStamped()
-        ps1.header.frame_id = "sim_pose"
+        ps1.header.frame_id = "base_link"
         ps1.header.stamp = rospy.Time(0)
         ps1.pose.position.x = self.x_offset
         ps1.pose.position.y = 0.0
@@ -142,7 +142,7 @@ class FakeURGNode:
             (range_pose[0, 0], range_pose[0, 1], 0.0),
             tf.transformations.quaternion_from_euler(0, 0, range_pose[0, 2]),
             now,
-            "laser",
+            "laser_link",
             "map",
         )
 

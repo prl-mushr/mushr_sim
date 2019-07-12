@@ -1,6 +1,7 @@
 <!-- -*- mode: XML -*- -->
 <launch>
-  <arg name="sensors_config" default="$(find mushr_sim)/config/sensors.yaml" />
+  <arg name="racecar_version"/>
+  <arg name="sensors_config" default="$(find mushr_sim)/config/$(arg racecar_version)/sensors.yaml" />
   <rosparam file="$(arg sensors_config)" command="load" />
 
   <node pkg="mushr_sim" type="fake_urg_node.py" name="laser_node" output="screen" />
