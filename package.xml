@@ -23,6 +23,7 @@
   <exec_depend>tf</exec_depend>
   <exec_depend>tf2_ros</exec_depend>
   <exec_depend>mushr_base</exec_depend>
+  <exec_depend>vesc</exec_depend>
 
   <export>
   </export>
