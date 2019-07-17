@@ -3,7 +3,7 @@ The MuSHR simulator is the easiest way to get started with MuSHR. The simulated 
 
 To make running the sim easier for various platforms we have provided a docker container with all the necessary components included. See below for setup.
 
-## Install
+### Install
 To run the sim you will need to install docker from [here](https://docs.docker.com/v17.12/install/) and docker-compose found [here](https://docs.docker.com/compose/install/). You will also need the host computer to have some nvidia driver. The default driver setup is for `nvidia-390`, you can check your driver version by running `nvidia-smi` in a terminal.
 
 1. If docker deamon isn't running run `systemctl start docker`
@@ -21,5 +21,22 @@ NOTE: If you need to be root to download additional software run `docker exec -i
 
 For more details, checkout the tutorial!
 
-## Tutorials
+### Tutorials
 Tutorials using the simulator can be found in the main [MuSHR repository](https://github.com/personalrobotics/mushr)
+
+### API
+For adjusting params see `config` it has the simulated vesc params and also the sensor params for each car. If you don't find the publishers or subscribers you were looking for, they are likely in [mushr_base](https://github.com/prl-mushr/mushr_base).
+
+#### Publishers
+Topic | Type | Description
+------|------|------------
+`/mux/ackermann_cmd_mux/input/teleop`| [ackermann_msgs/AckermannDriveStamped](http://docs.ros.org/api/ackermann_msgs/html/msg/AckermannDriveStamped.html) | Publish teleop controls from keyboard
+`/map` | [nav_msgs/OccupancyGrid](http://docs.ros.org/api/nav_msgs/html/msg/OccupancyGrid.html) | Map from map server
+`/map_metadata` | [nav_msgs/MapMetaData](http://docs.ros.org/api/nav_msgs/html/msg/MapMetaData.html) | Map metadata
+`/scan` | [sensor_msgs/LaserScan](http://docs.ros.org/api/sensor_msgs/html/msg/LaserScan.html) | Simulated laser scan topic
+
+#### Subscribers
+Topic | Type | Description
+------|------|------------
+`/tf` | [tf2_msgs/TFMessage](http://docs.ros.org/api/tf2_msgs/html/msg/TFMessage.html) | Transforms for the laserscan
+`/tf_static` | [tf2_msgs/TFMessage](http://docs.ros.org/api/tf2_msgs/html/msg/TFMessage.html) | Static transforms for the laserscan
