@@ -7,7 +7,7 @@ To make running the sim easier for various platforms we have provided a docker c
 To run the sim you will need to install docker from [here](https://docs.docker.com/v17.12/install/) and docker-compose found [here](https://docs.docker.com/compose/install/). You will also need the host computer to have some nvidia driver. The default driver setup is for `nvidia-390`, you can check your driver version by running `nvidia-smi` in a terminal.
 
 1. If docker deamon isn't running run `systemctl start docker`
-2. Download the [mushr_sim](docker.io/schmittle/mushr_sim) image using docker commands
+2. Download the [mushr_sim](https://hub.docker.com/r/schmittle/mushr_sim) image using docker commands
 3. Clone this repo and `cd .../mushr_sim/mushr_sim_docker/`
 4. Using your favorite text editor, change .env to your driver version number ingoring numbers past decimal
 5. `docker-compose up -d` This should create a container visible if you type `docker ps`
