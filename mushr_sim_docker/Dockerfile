@@ -1,4 +1,4 @@
-FROM mushr_sim:latest
+FROM mushr_sim:stable
 
 #replace with your uid/gid
 RUN export uid=1000 gid=1000 && \
