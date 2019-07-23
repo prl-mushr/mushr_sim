@@ -19,6 +19,7 @@ state = [False, False, False, False]
 state_lock = Lock()
 state_pub = None
 root = None
+control = False
 
 
 def keyeq(e, c):
@@ -27,8 +28,10 @@ def keyeq(e, c):
 
 def keyup(e):
     global state
+    global control
 
     with state_lock:
+        control = False
         if keyeq(e, UP):
             state[0] = False
         elif keyeq(e, LEFT):
@@ -41,8 +44,10 @@ def keyup(e):
 
 def keydown(e):
     global state
+    global control
 
     with state_lock:
+        control = True
         if keyeq(e, QUIT):
             shutdown()
         elif keyeq(e, UP):
@@ -67,6 +72,8 @@ def keydown(e):
 
 def publish_cb(_):
     with state_lock:
+        if not control:
+            return
         ack = AckermannDriveStamped()
         if state[0]:
             ack.drive.speed = max_velocity
