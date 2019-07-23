@@ -1,7 +1,7 @@
-FROM mushr_sim:stable
+FROM schmittle/mushr_sim:stable
 
 #replace with your uid/gid
-RUN export uid=1000 gid=1000 && \
+RUN export uid=1001 gid=1001 && \
     echo "developer:x:${uid}:${gid}:Developer,,,:/home/developer:/bin/bash" >> /etc/passwd && \
     mkdir -p /etc/sudoers.d/ && \
     echo "developer:x:${uid}:" >> /etc/group && \
