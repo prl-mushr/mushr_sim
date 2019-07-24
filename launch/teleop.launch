@@ -7,7 +7,7 @@
     <arg name="force_in_bounds" value = "0"/>
 
     <!-- Could be racecar-mit, racecar-uw-tx2, or racecar-uw-nano -->
-    <arg name="racecar_version" default="racecar-uw-nano" />
+    <arg name="racecar_version" default="racecar-uw-tx2" />
 
     <group ns="vesc">
         <!-- Start electronic speed controller driver -->
