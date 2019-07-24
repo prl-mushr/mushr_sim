@@ -10,19 +10,17 @@ To run the sim you will need to install docker from [here](https://docs.docker.c
 2. Check if docker is running: `docker run hello-world`. If not, run:
 - Linux:`systemctl start docker` 
 - Mac: `open /Applications/Docker.app` 
-- Windows: `restart-service *docker*`
-3. Download the [mushr_sim](https://hub.docker.com/r/schmittle/mushr_sim) image:   
-`docker pull schmittle/mushr_sim:stable`
-4. Clone this repo: 
+- Windows: `restart-service *docker*`  
+3. Clone this repo: 
 `git clone https://github.com/prl-mushr/mushr_sim && cd mushr_sim/docker/`
-5. Using your favorite text editor, change .env to your nvidia driver version number ingoring numbers past decimal and ones digit. For example, 341.2 would become 340
-6. `docker-compose up -d` This should create a container visible if you type `docker ps`
-7. `docker exec -it <container ID> bash` This will get you into the container as user developer.
-8. `roslaunch mushr_sim teleop.launch`
-9. In a new terminal redo step 7 (or use tmux) and run:  
+4. Using your favorite text editor, change .env to your nvidia driver version number ingoring numbers past decimal and ones digit. For example, 341.2 would become 340
+5. `docker-compose up -d` This should create a container visible if you type `docker ps`
+6. `docker exec -it <container ID> bash` This will get you into the container as user developer.
+7. `roslaunch mushr_sim teleop.launch`
+8. In a new terminal redo step 7 (or use tmux) and run:  
 `rviz`  
 A map with a car model and arrow of the car pose should now be visible
-11. Give it an initial pose using the "2D Pose Estimate" button at the top of the rviz window. And drive around using the WSDA keys while the small gray window is in focus  
+9. Give it an initial pose using the "2D Pose Estimate" button at the top of the rviz window. And drive around using the WSDA keys while the small gray window is in focus  
   
 NOTE: If you need to be root to download additional software run `docker exec -it -u 0 <container ID> bash`.
 
