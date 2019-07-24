@@ -4,18 +4,23 @@ The MuSHR simulator is the easiest way to get started with MuSHR. The simulated 
 To make running the sim easier for various platforms we have provided a docker container with all the necessary components included. See below for setup.
 
 ### Install
-To run the sim you will need to install docker from [here](https://docs.docker.com/v17.12/install/) and docker-compose found [here](https://docs.docker.com/compose/install/). You will also need the host computer to have some nvidia driver. The default driver setup is for `nvidia-390`, you can check your driver version by running `nvidia-smi` in a terminal.
+To run the sim you will need to install docker from [here](https://docs.docker.com/v17.12/install/) and docker-compose (Windows/Linux only!) found [here](https://docs.docker.com/compose/install/). You will also need the host computer to have some nvidia driver. The default driver setup is for `nvidia-390`. You can check your driver version in [linux](https://linuxconfig.org/how-to-check-nvidia-driver-version-on-your-linux-system), [mac](https://bluebellflora.com/finding-out-which-nvidia-geforce-driver-version-your-mac-is-running/), and [windows](https://nvidia.custhelp.com/app/answers/detail/a_id/2039/~/how-do-i-determine-which-nvidia-display-driver-version-is-currently-installed). You will also need [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
 
-1. If docker deamon isn't running run `systemctl start docker`
-2. Download the [mushr_sim](https://hub.docker.com/r/schmittle/mushr_sim) image using docker commands
-3. Clone this repo and `cd .../mushr_sim/mushr_sim_docker/`
-4. Using your favorite text editor, change .env to your driver version number ingoring numbers past decimal
+1. Open up a terminal
+2. Check if docker is running: `docker run hello-world`. If not, run:
+- Linux:`systemctl start docker` 
+- Mac: `open /Applications/Docker.app` 
+- Windows: `restart-service *docker*`  
+3. Clone this repo: 
+`git clone https://github.com/prl-mushr/mushr_sim && cd mushr_sim/docker/`
+4. Using your favorite text editor, change .env to your nvidia driver version number ingoring numbers past decimal and ones digit. For example, 341.2 would become 340
 5. `docker-compose up -d` This should create a container visible if you type `docker ps`
 6. `docker exec -it <container ID> bash` This will get you into the container as user developer.
 7. `roslaunch mushr_sim teleop.launch`
-8. In a new terminal redo step 6 or use tmux before step 7 and create a new window
-9. `rviz` a map with a car model and arrow of the car pose should now be visible
-10. Give it an initial pose using the button at the top of the rviz window. And drive around using the WSDA keys while the small gray window is in focus  
+8. In a new terminal redo step 7 (or use tmux) and run:  
+`rviz`  
+A map with a car model and arrow of the car pose should now be visible
+9. Give it an initial pose using the "2D Pose Estimate" button at the top of the rviz window. And drive around using the WSDA keys while the small gray window is in focus  
   
 NOTE: If you need to be root to download additional software run `docker exec -it -u 0 <container ID> bash`.
 

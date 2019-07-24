@@ -31,7 +31,6 @@ def keyup(e):
     global control
 
     with state_lock:
-        control = False
         if keyeq(e, UP):
             state[0] = False
         elif keyeq(e, LEFT):
@@ -40,6 +39,7 @@ def keyup(e):
             state[2] = False
         elif keyeq(e, RIGHT):
             state[3] = False
+        control = sum(state) > 0
 
 
 def keydown(e):
@@ -47,7 +47,6 @@ def keydown(e):
     global control
 
     with state_lock:
-        control = True
         if keyeq(e, QUIT):
             shutdown()
         elif keyeq(e, UP):
@@ -62,6 +61,7 @@ def keydown(e):
         elif keyeq(e, RIGHT):
             state[3] = True
             state[1] = False
+        control = sum(state) > 0
 
 
 # Up -> linear.x = 1.0

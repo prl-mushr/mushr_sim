@@ -38,8 +38,6 @@ class FakeURGNode:
             occ_map, max_range_px, self.THETA_DISCRETIZATION
         )
 
-        self.br = tf.TransformBroadcaster()
-
         self.tl = tf.TransformListener()
         now = rospy.Time.now()
         self.tl.waitForTransform("base_link", "laser_link", now, rospy.Duration(5.0))
@@ -137,14 +135,6 @@ class FakeURGNode:
         self.noise_laser_scan(ranges)
         ls.ranges = ranges.tolist()
         self.laser_pub.publish(ls)
-
-        self.br.sendTransform(
-            (range_pose[0, 0], range_pose[0, 1], 0.0),
-            tf.transformations.quaternion_from_euler(0, 0, range_pose[0, 2]),
-            now,
-            "laser_link",
-            "map",
-        )
 
     def get_map(self):
         # Use the 'static_map' service (launched by MapServer.launch) to get the map
