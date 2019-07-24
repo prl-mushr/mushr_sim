@@ -13,4 +13,4 @@ services:
         stdin_open: true
         tty: true
         privileged: true
-        command: bash
+        entrypoint: bash -c "./home/developer/entrypoint.bash"
