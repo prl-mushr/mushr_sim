@@ -4,7 +4,7 @@
     <arg name="map_server" value = "1"/>
 
     <!-- If the robot will abide by map_server walls -->
-    <arg name="force_in_bounds" value = "0"/>
+    <arg name="force_in_bounds" value = "1"/>
 
     <!-- Could be racecar-mit, racecar-uw-tx2, or racecar-uw-nano -->
     <arg name="racecar_version" default="racecar-uw-tx2" />
