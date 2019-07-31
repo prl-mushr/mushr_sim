@@ -22,7 +22,7 @@ A map with a car model and arrow of the car pose should now be visible in rviz a
 For more details, checkout the tutorial!
 
 ### Tutorials
-Tutorials using the simulator can be found in the main [MuSHR repository](https://github.com/personalrobotics/mushr)
+Tutorials using the simulator can be found [here](https://prl-mushr.github.io/tutorials/quickstart/).
 
 ### API
 For adjusting params see `config` it has the simulated vesc params and also the sensor params for each car. If you don't find the publishers or subscribers you were looking for, they are likely in [mushr_base](https://github.com/prl-mushr/mushr_base).
