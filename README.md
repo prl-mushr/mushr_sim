@@ -4,7 +4,7 @@ The MuSHR simulator is the easiest way to get started with MuSHR. The simulated 
 To make running the sim easier for various platforms we have provided a docker container with all the necessary components included. See below for setup.
 
 ### Install
-To run the sim you will need to install docker from [here](https://docs.docker.com/v17.12/install/) and docker-compose found [here](https://docs.docker.com/compose/install/). You will also need the host computer to have some nvidia driver. The default driver setup is for `nvidia-390`. You can check your driver version in [linux](https://linuxconfig.org/how-to-check-nvidia-driver-version-on-your-linux-system), [mac](https://bluebellflora.com/finding-out-which-nvidia-geforce-driver-version-your-mac-is-running/), and [windows](https://nvidia.custhelp.com/app/answers/detail/a_id/2039/~/how-do-i-determine-which-nvidia-display-driver-version-is-currently-installed). You will also need [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
+To run the sim you will need to install docker from [here](https://docs.docker.com/v17.12/install/) and docker-compose found [here](https://docs.docker.com/compose/install/). You will also need the host computer to have some nvidia driver. The default driver setup is for `nvidia-390`. You can check your driver version in [linux](https://linuxconfig.org/how-to-check-nvidia-driver-version-on-your-linux-system). You will also need [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
 
 1. Open up a terminal
 2. Check if docker is running: `docker run hello-world`. If not, run:
@@ -20,6 +20,20 @@ A map with a car model and arrow of the car pose should now be visible in rviz a
 10. To enter the container use `docker exec -it <container ID> bash` You will be the developer user. If you need to be root to download additional software run `docker exec -it -u 0 <container ID> bash`.  
 
 For more details, checkout the tutorial!
+
+If you don't want to use a docker container on your linux system, you will need the following:  
+- [ROS Melodic](http://wiki.ros.org/melodic/Installation)
+- A [catkin_ws](http://wiki.ros.org/catkin/Tutorials/create_a_workspace)
+- rviz: `sudo apt-get install ros-melodic-rviz`
+- [mushr](https://github.com/prl-mushr/mushr)
+- [vesc](https://github.com/prl-mushr/vesc)
+- [mushr_base](https://github.com/prl-mushr/mushr_base)
+- ackermann_msgs: `sudo apt-get install -y ros-melodic-ackermann-msgs`
+- map server: `sudo apt-get install -y ros-melodic-map-server`
+- serial: `sudo apt-get install -y ros-melodic-serial`
+- urg-node: `sudo apt-get install -y ros-melodic-urg-node`
+- robot state publisher: `sudo apt-get install -y ros-melodic-robot-state-publisher`
+- [realsense description only](https://github.com/IntelRealSense/realsense-ros/tree/development/realsense2_description)
 
 ### Tutorials
 Tutorials using the simulator can be found [here](https://prl-mushr.github.io/tutorials/quickstart/).
