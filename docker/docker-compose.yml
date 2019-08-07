@@ -2,6 +2,7 @@ version: '3.7'
 services:
     sim:
         build: .
+        network_mode: host
         volumes:
             - /tmp/.X11-unix:/tmp/.X11-unix:rw
             - /usr/lib/nvidia-${NVIDIA}:/usr/lib/nvidia-${NVIDIA}
