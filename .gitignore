@@ -36,3 +36,6 @@ CATKIN_IGNORE
 
 #vscode
 .vscode
+
+docker/Dockerfile
+docker/.env
