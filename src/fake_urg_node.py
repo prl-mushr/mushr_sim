@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 
 import numpy as np
+import range_libc
 import rospy
 import tf
 from geometry_msgs.msg import PoseStamped
 from nav_msgs.srv import GetMap
 from sensor_msgs.msg import LaserScan
 
-import range_libc
 import utils
 
 
@@ -113,7 +113,7 @@ class FakeURGNode:
 
         ps1 = PoseStamped()
         ps1.header.frame_id = "base_link"
-        ps1.header.stamp = rospy.Time(0)
+        ps1.header.stamp = now  # rospy.Time(0)
         ps1.pose.position.x = self.x_offset
         ps1.pose.position.y = 0.0
         ps1.pose.position.z = 0.0
@@ -122,6 +122,7 @@ class FakeURGNode:
         ps1.pose.orientation.z = 0.0
         ps1.pose.orientation.w = 1.0
 
+        self.tl.waitForTransform("base_link", "map", now, rospy.Duration(5.0))
         laser_pose = self.tl.transformPose("map", ps1)
         range_pose = np.array(
             (

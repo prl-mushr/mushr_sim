@@ -68,6 +68,7 @@ jobs:
       rosdep update
 
       # You can add any preamble here (install packages, load configuration, etc.) to setup testing
+      sudo apt install ros-kinetic-ackermann-msgs
 
       python -m nose2 -v --pretty-assert -s $(test_dir)
     displayName: Run tests (nose2)
