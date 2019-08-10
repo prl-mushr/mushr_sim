@@ -4,7 +4,7 @@ import numpy as np
 import range_libc
 import rospy
 import tf
-from geometry_msgs.msg import PoseStamped
+from geometry_msgs.msg import Quaternion
 from nav_msgs.srv import GetMap
 from sensor_msgs.msg import LaserScan
 
@@ -39,15 +39,17 @@ class FakeURGNode:
         )
 
         self.tl = tf.TransformListener()
-        now = rospy.Time.now()
-        self.tl.waitForTransform("base_link", "laser_link", now, rospy.Duration(5.0))
-        position, orientation = self.tl.lookupTransform("base_link", "laser_link", now)
-        self.x_offset = -1 * self.CAR_LENGTH / 2.0 + position[0]
+
+        while not self.tl.frameExists("base_link"):
+            pass
+
+        while not self.tl.frameExists("laser_link"):
+            pass
+        
+        position, orientation = self.tl.lookupTransform("base_link", "laser_link", rospy.Time(0))
+        self.x_offset = position[0]
 
         self.laser_pub = rospy.Publisher("/scan", LaserScan, queue_size=1)
-
-        # Hack to wait for tfs to be available. self.tl.frame_exists doesn't sem to work
-        rospy.wait_for_message("/car_pose", PoseStamped)
 
         self.update_timer = rospy.Timer(
             rospy.Duration.from_sec(1.0 / self.UPDATE_RATE), self.timer_cb
@@ -111,24 +113,26 @@ class FakeURGNode:
 
         ranges = np.zeros(len(self.ANGLES) * 1, dtype=np.float32)
 
-        ps1 = PoseStamped()
-        ps1.header.frame_id = "base_link"
-        ps1.header.stamp = now  # rospy.Time(0)
-        ps1.pose.position.x = self.x_offset
-        ps1.pose.position.y = 0.0
-        ps1.pose.position.z = 0.0
-        ps1.pose.orientation.x = 0.0
-        ps1.pose.orientation.y = 0.0
-        ps1.pose.orientation.z = 0.0
-        ps1.pose.orientation.w = 1.0
+        try:
+            base_to_map_trans, base_to_map_rot = self.tl.lookupTransform("map", "base_link", rospy.Time(0))
+        except Exception as e:
+            return
 
-        self.tl.waitForTransform("base_link", "map", now, rospy.Duration(5.0))
-        laser_pose = self.tl.transformPose("map", ps1)
+        laser_quat = Quaternion()
+        laser_quat.x = base_to_map_rot[0]
+        laser_quat.y = base_to_map_rot[1]
+        laser_quat.z = base_to_map_rot[2]
+        laser_quat.w = base_to_map_rot[3]
+
+        laser_angle = utils.quaternion_to_angle(laser_quat)
+        laser_pose_x = base_to_map_trans[0] + self.x_offset * np.cos(laser_angle)
+        laser_pose_y = base_to_map_trans[1] + self.x_offset * np.sin(laser_angle)
+
         range_pose = np.array(
             (
-                laser_pose.pose.position.x,
-                laser_pose.pose.position.y,
-                utils.quaternion_to_angle(laser_pose.pose.orientation),
+                laser_pose_x,
+                laser_pose_y,
+                laser_angle,
             ),
             dtype=np.float32,
         ).reshape(1, 3)
