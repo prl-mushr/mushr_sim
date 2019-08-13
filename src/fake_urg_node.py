@@ -45,8 +45,10 @@ class FakeURGNode:
 
         while not self.tl.frameExists("laser_link"):
             pass
-        
-        position, orientation = self.tl.lookupTransform("base_link", "laser_link", rospy.Time(0))
+
+        position, orientation = self.tl.lookupTransform(
+            "base_link", "laser_link", rospy.Time(0)
+        )
         self.x_offset = position[0]
 
         self.laser_pub = rospy.Publisher("/scan", LaserScan, queue_size=1)
@@ -114,8 +116,10 @@ class FakeURGNode:
         ranges = np.zeros(len(self.ANGLES) * 1, dtype=np.float32)
 
         try:
-            base_to_map_trans, base_to_map_rot = self.tl.lookupTransform("map", "base_link", rospy.Time(0))
-        except Exception as e:
+            base_to_map_trans, base_to_map_rot = self.tl.lookupTransform(
+                "map", "base_link", rospy.Time(0)
+            )
+        except Exception:
             return
 
         laser_quat = Quaternion()
@@ -129,12 +133,7 @@ class FakeURGNode:
         laser_pose_y = base_to_map_trans[1] + self.x_offset * np.sin(laser_angle)
 
         range_pose = np.array(
-            (
-                laser_pose_x,
-                laser_pose_y,
-                laser_angle,
-            ),
-            dtype=np.float32,
+            (laser_pose_x, laser_pose_y, laser_angle), dtype=np.float32
         ).reshape(1, 3)
         self.range_method.calc_range_repeat_angles(range_pose, self.ANGLES, ranges)
         self.noise_laser_scan(ranges)
