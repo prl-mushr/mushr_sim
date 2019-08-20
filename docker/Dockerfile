@@ -1,5 +1,6 @@
 FROM schmittle/mushr_sim:stable
 
+USER root
 #replace with your uid/gid
 RUN export uid=1001 gid=1001 && \
     echo "developer:x:${uid}:${gid}:Developer,,,:/home/developer:/bin/bash" >> /etc/passwd && \

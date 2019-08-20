@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 
+# Copyright (c) 2019, The Personal Robotics Lab, The MuSHR Team, The Contributors of MuSHR
+# License: BSD 3-Clause. See LICENSE.md file in root directory.
+
 import atexit
 import os
 import signal
 from threading import Lock
-from Tkinter import Frame, Tk
+from Tkinter import Frame, Tk, Label
 
 import rospy
 from ackermann_msgs.msg import AckermannDriveStamped
@@ -120,6 +123,8 @@ def main():
     frame.bind("<KeyRelease>", keyup)
     frame.pack()
     frame.focus_set()
+    lab = Label(frame, height=10, width=30, text="Focus on this window\nand use the WASD keys\nto drive the car.\n\nPress Q to quit")
+    lab.pack()
     print("Press %c to quit" % QUIT)
     root.mainloop()
 
