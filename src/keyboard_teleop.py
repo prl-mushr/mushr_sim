@@ -7,7 +7,7 @@ import atexit
 import os
 import signal
 from threading import Lock
-from Tkinter import Frame, Tk, Label
+from Tkinter import Frame, Label, Tk
 
 import rospy
 from ackermann_msgs.msg import AckermannDriveStamped
@@ -123,7 +123,12 @@ def main():
     frame.bind("<KeyRelease>", keyup)
     frame.pack()
     frame.focus_set()
-    lab = Label(frame, height=10, width=30, text="Focus on this window\nand use the WASD keys\nto drive the car.\n\nPress Q to quit")
+    lab = Label(
+        frame,
+        height=10,
+        width=30,
+        text="Focus on this window\nand use the WASD keys\nto drive the car.\n\nPress Q to quit",
+    )
     lab.pack()
     print("Press %c to quit" % QUIT)
     root.mainloop()
