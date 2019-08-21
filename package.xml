@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>mushr_sim</name>
-  <version>0.0.0</version>
-  <description>Mushr sim package, created by Patrick Lancaster</description>
+  <version>1.0.0</version>
+  <description>A simulator for the MuSHR car. Created by Patrick Lancaster</description>
 
   <maintainer email="schmittle@cs.washington.edu">schmittle</maintainer>
   <maintainer email="rockettm@cs.washington.edu">Matthew Rockett</maintainer>
