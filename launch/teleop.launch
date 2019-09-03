@@ -1,22 +1,28 @@
 <!-- -*- mode: XML -*- -->
 <launch>
     <!-- Set to 1 if you want to run the map_server -->
-    <arg name="map_server" value = "1"/>
+    <arg name="map_server" default="1"/>
 
     <!-- If the robot will abide by map_server walls -->
-    <arg name="force_in_bounds" value = "1"/>
+    <arg name="force_in_bounds" default="1"/>
 
     <!-- Could be racecar-mit, racecar-uw-tx2, or racecar-uw-nano -->
     <arg name="racecar_version" default="racecar-uw-nano" />
 
+    <!-- When launching multiple simulators, the nodes need to be segregated by namespace.
+         The default will launch in the top level (global) namespace. -->
+    <arg name="car_ns" default="" />
+
+    <remap from="/tf" to="$(arg car_ns)/tf" />
+    <remap from="/tf_static" to="$(arg car_ns)/tf_static" />
+
     <group ns="vesc">
         <!-- Start electronic speed controller driver -->
         <include file="$(find mushr_sim)/launch/vesc.launch.xml" />
+        <param name="ackermann_cmd" value="$(arg car_ns)/mux/ackermann_cmd_mux/output" />
     </group>
 
-    <group ns="teleop">
-        <include file="$(find mushr_sim)/launch/keyboard_teleop.launch.xml" />
-    </group>
+    <include file="$(find mushr_sim)/launch/keyboard_teleop.launch.xml" />
 
     <group ns="mux">
         <!-- Spawn MUXs -->
@@ -33,11 +39,11 @@
          textfile="$(find mushr_description)/robots/$(arg racecar_version).urdf"/>
 
     <include file="$(find mushr_base)/launch/includes/racecar_state.launch" >
-	    <arg name="force_in_bounds" value="$(arg force_in_bounds)"/>
+        <arg name="force_in_bounds" value="$(arg force_in_bounds)"/>
     </include>
 
-    <node pkg="robot_state_publisher" type="robot_state_publisher" name="state_publisher"/>
-    
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="state_publisher" />
+
     <!-- Launch  map server-->
     <group if="$(arg map_server)">
         <include file="$(find mushr_sim)/launch/map_server.launch" />

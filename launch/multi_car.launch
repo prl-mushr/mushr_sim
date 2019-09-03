@@ -1,0 +1,15 @@
+<launch>
+    <group ns="car1">
+        <include file="$(find mushr_sim)/launch/teleop.launch">
+            <arg name="car_ns" value="/car1" />
+            <arg name="map_server" value="0" />
+        </include>
+    </group>
+
+    <group ns="car2">
+        <include file="$(find mushr_sim)/launch/teleop.launch">
+            <arg name="car_ns" value="/car2" />
+            <arg name="map_server" value="0" />
+        </include>
+    </group>
+</launch>
