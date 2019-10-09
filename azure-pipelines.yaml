@@ -32,9 +32,14 @@ jobs:
     condition: succeededOrFailed()
 
   - bash: |
-      sudo apt-get update && sudo apt-get install --no-install-recommends -y python-tk
+      sudo apt-get update
+      sudo apt-get install --no-install-recommends -y python-tk
+
       mkdir -p /catkin_ws/src/$(Build.Repository.Name)
       cp -r * /catkin_ws/src/$(Build.Repository.Name)
+
+      # since we are testing sim, we want to use our version
+      rm -rf /catkin_ws/src/mushr_sim
 
       cd /catkin_ws
       /ros_entrypoint.sh catkin_make
