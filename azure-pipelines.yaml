@@ -12,6 +12,7 @@ jobs:
   variables:
     azure_tmpdir: $(Agent.TempDirectory)
     devtools: $(azure_tmpdir)/devtools
+    CatkinProjectDir: /catkin_ws/src/$(Build.Repository.Name)
 
   container: prlmushr/mushr:bionic
 
@@ -32,18 +33,23 @@ jobs:
     condition: succeededOrFailed()
 
   - bash: |
-      sudo apt-get update
-      sudo apt-get install --no-install-recommends -y python-tk
+      source /opt/ros/melodic/setup.bash
 
-      mkdir -p /catkin_ws/src/$(Build.Repository.Name)
-      cp -r * /catkin_ws/src/$(Build.Repository.Name)
+      sudo chown -R $(whoami) /catkin_ws
 
       # since we are testing sim, we want to use our version
       rm -rf /catkin_ws/src/mushr_sim
 
-      cd /catkin_ws
-      /ros_entrypoint.sh catkin_make
+      mkdir -p $(CatkinProjectDir)
+      cp -r * $(CatkinProjectDir)
 
-      /ros_entrypoint.sh catkin_make run_tests
+      cd /catkin_ws
+      # build and source setup files
+      catkin_make
+      source devel/setup.bash
+
+      # test
+      cd $(CatkinProjectDir)
+      ./test.sh
     displayName: Run tests
     condition: succeededOrFailed()
