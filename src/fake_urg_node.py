@@ -16,6 +16,7 @@ import utils
 
 class FakeURGNode:
     def __init__(self):
+
         self.UPDATE_RATE = float(rospy.get_param("~update_rate", 10.0))
         self.THETA_DISCRETIZATION = float(rospy.get_param("~theta_discretization", 656))
         self.MIN_RANGE_METERS = float(rospy.get_param("~min_range_meters", 0.02))
@@ -33,6 +34,9 @@ class FakeURGNode:
         self.Z_RAND = float(rospy.get_param("~z_rand", 0.01))
         self.Z_HIT = float(rospy.get_param("~z_hit", 0.8))
         self.Z_SIGMA = float(rospy.get_param("~z_sigma", 0.03))
+        self.TF_PREFIX = str(rospy.get_param("~tf_prefix", "").rstrip("/"))
+        if len(self.TF_PREFIX) > 0:
+            self.TF_PREFIX = self.TF_PREFIX + '/'       
 
         map_msg = self.get_map()
         occ_map = range_libc.PyOMap(map_msg)
@@ -43,18 +47,18 @@ class FakeURGNode:
 
         self.tl = tf.TransformListener()
 
-        while not self.tl.frameExists("base_link"):
+        while not self.tl.frameExists(self.TF_PREFIX+"base_link"):
             pass
 
-        while not self.tl.frameExists("laser_link"):
+        while not self.tl.frameExists(self.TF_PREFIX+"laser_link"):
             pass
 
         position, orientation = self.tl.lookupTransform(
-            "base_link", "laser_link", rospy.Time(0)
+            self.TF_PREFIX+"base_link", self.TF_PREFIX+"laser_link", rospy.Time(0)
         )
         self.x_offset = position[0]
 
-        self.laser_pub = rospy.Publisher("/scan", LaserScan, queue_size=1)
+        self.laser_pub = rospy.Publisher("scan", LaserScan, queue_size=1)
 
         self.update_timer = rospy.Timer(
             rospy.Duration.from_sec(1.0 / self.UPDATE_RATE), self.timer_cb
@@ -107,7 +111,7 @@ class FakeURGNode:
 
         now = rospy.Time.now()
         ls = LaserScan()
-        ls.header.frame_id = "laser_link"
+        ls.header.frame_id = self.TF_PREFIX+"laser_link"
         ls.header.stamp = now
         ls.angle_increment = self.ANGLE_STEP
         ls.angle_min = self.ANGLE_MIN
@@ -120,7 +124,7 @@ class FakeURGNode:
 
         try:
             base_to_map_trans, base_to_map_rot = self.tl.lookupTransform(
-                "map", "base_link", rospy.Time(0)
+                "/map", self.TF_PREFIX+"base_link", rospy.Time(0)
             )
         except Exception:
             return
@@ -145,7 +149,7 @@ class FakeURGNode:
 
     def get_map(self):
         # Use the 'static_map' service (launched by MapServer.launch) to get the map
-        map_service_name = rospy.get_param("~static_map", "static_map")
+        map_service_name = rospy.get_param("~static_map", "/static_map")
         rospy.wait_for_service(map_service_name)
         map_msg = rospy.ServiceProxy(map_service_name, GetMap)().map
         return map_msg

@@ -1,0 +1,29 @@
+<launch>
+
+    <arg name="car1_name" default="car1" />
+    <arg name="car2_name" default="car2" />
+
+    <!-- Set to 1 if you want to run the map_server -->
+    <arg name="map_server" value = "1"/>
+
+    <!-- Launch  map server-->
+    <group if="$(arg map_server)">
+        <include file="$(find mushr_sim)/launch/map_server.launch" />
+    </group>
+
+    <!-- Launch first car -->
+    <group ns="$(arg car1_name)">
+         <include file="$(find mushr_sim)/launch/single_car.launch" >
+            <arg name="car_name" value="$(arg car1_name)"/>
+        </include>
+    </group>
+
+    <!-- Launch second car -->
+    <group ns="$(arg car2_name)">
+        <include file="$(find mushr_sim)/launch/single_car.launch" >
+            <arg name="car_name" value="$(arg car2_name)"/>
+            <arg name="racecar_version" value="racecar-uw-tx2"/>
+        </include>
+    </group>
+
+</launch>
