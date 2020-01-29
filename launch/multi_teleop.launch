@@ -15,6 +15,8 @@
     <group ns="$(arg car1_name)">
          <include file="$(find mushr_sim)/launch/single_car.launch" >
             <arg name="car_name" value="$(arg car1_name)"/>
+            <arg name="racecar_version" value="racecar-uw-nano"/>
+            <arg name="racecar_color" value="" />
         </include>
     </group>
 
@@ -22,7 +24,8 @@
     <group ns="$(arg car2_name)">
         <include file="$(find mushr_sim)/launch/single_car.launch" >
             <arg name="car_name" value="$(arg car2_name)"/>
-            <arg name="racecar_version" value="racecar-uw-tx2"/>
+            <arg name="racecar_version" value="racecar-uw-nano"/>
+            <arg name="racecar_color" value="-green-black" />
         </include>
     </group>
 
