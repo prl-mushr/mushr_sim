@@ -1,0 +1,53 @@
+<launch>
+
+    <arg name="car_name" default=""/>
+
+    <!-- Could be racecar-mit, racecar-uw-tx2, or racecar-uw-nano -->
+    <arg name="racecar_version" default="racecar-uw-nano" />
+
+    <!-- The colors of the racecar, should be of the form "-<platform_color>-<inset_color>" -->
+    <!-- An empty string will result in the default URDF -->
+    <!-- Check CMakeLists.txt of mushr_description for appropriate values -->
+    <arg name="racecar_color" default=""/>
+
+    <!-- If the robot will abide by map_server walls -->
+    <arg name="force_in_bounds" value = "1"/>
+
+    <!-- Launch  model/state publishers-->
+    <param name="robot_description"
+         textfile="$(find mushr_description)/robots/$(arg racecar_version)$(arg racecar_color).urdf"/>
+
+    <include file="$(find mushr_base)/launch/includes/racecar_state.launch" >
+            <arg name="force_in_bounds" value="$(arg force_in_bounds)"/>
+            <arg name="tf_prefix" value="$(arg car_name)" />
+    </include>
+
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="state_publisher">
+        <param name="tf_prefix" value="$(arg car_name)"/>
+        <param name="robot_description" value="/$(arg car_name)/robot_description" />
+    </node>
+
+
+    <include file="$(find mushr_sim)/launch/keyboard_teleop.launch.xml" />
+
+
+    <group ns="mux">
+        <!-- Spawn MUXs -->
+        <include file="$(find ackermann_cmd_mux)/launch/mux.launch" />
+    </group>
+
+    <group ns="vesc">
+        <!-- Start electronic speed controller driver -->
+        <include file="$(find mushr_sim)/launch/vesc.launch.xml" >
+            <arg name="mux_output_topic" value="/$(arg car_name)/mux/ackermann_cmd_mux/output"/>
+        </include>
+    </group>
+
+    <!-- Launch sensors -->
+    <include file="$(find mushr_sim)/launch/sensors.launch.xml" >
+        <arg name="racecar_version" value="$(arg racecar_version)" />
+        <arg name="tf_prefix" value="$(arg car_name)"/>
+    </include>
+
+
+</launch>
