@@ -36,7 +36,7 @@ class FakeURGNode:
         self.Z_SIGMA = float(rospy.get_param("~z_sigma", 0.03))
         self.TF_PREFIX = str(rospy.get_param("~tf_prefix", "").rstrip("/"))
         if len(self.TF_PREFIX) > 0:
-            self.TF_PREFIX = self.TF_PREFIX + '/'       
+            self.TF_PREFIX = self.TF_PREFIX + "/"
 
         map_msg = self.get_map()
         occ_map = range_libc.PyOMap(map_msg)
@@ -47,14 +47,14 @@ class FakeURGNode:
 
         self.tl = tf.TransformListener()
 
-        while not self.tl.frameExists(self.TF_PREFIX+"base_link"):
+        while not self.tl.frameExists(self.TF_PREFIX + "base_link"):
             pass
 
-        while not self.tl.frameExists(self.TF_PREFIX+"laser_link"):
+        while not self.tl.frameExists(self.TF_PREFIX + "laser_link"):
             pass
 
         position, orientation = self.tl.lookupTransform(
-            self.TF_PREFIX+"base_link", self.TF_PREFIX+"laser_link", rospy.Time(0)
+            self.TF_PREFIX + "base_link", self.TF_PREFIX + "laser_link", rospy.Time(0)
         )
         self.x_offset = position[0]
 
@@ -111,7 +111,7 @@ class FakeURGNode:
 
         now = rospy.Time.now()
         ls = LaserScan()
-        ls.header.frame_id = self.TF_PREFIX+"laser_link"
+        ls.header.frame_id = self.TF_PREFIX + "laser_link"
         ls.header.stamp = now
         ls.angle_increment = self.ANGLE_STEP
         ls.angle_min = self.ANGLE_MIN
@@ -124,7 +124,7 @@ class FakeURGNode:
 
         try:
             base_to_map_trans, base_to_map_rot = self.tl.lookupTransform(
-                "/map", self.TF_PREFIX+"base_link", rospy.Time(0)
+                "/map", self.TF_PREFIX + "base_link", rospy.Time(0)
             )
         except Exception:
             return
