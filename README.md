@@ -5,25 +5,25 @@ The MuSHR simulator is the easiest way to get started with MuSHR. The simulated 
 
 To make running the sim easier for various platforms we have provided a docker container with all the necessary components included. See below for setup.
 
+<!--
+### Install (Docker)
+To run the sim you will need to install docker from [here](https://docs.docker.com/v17.12/install/) and docker-compose found [here](https://docs.docker.com/compose/install/). You will also need the host computer to have some nvidia driver. The default driver setup is for `nvidia-390`. You can check your driver version in [linux](https://linuxconfig.org/how-to-check-nvidia-driver-version-on-your-linux-system). You will also need [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
 
-// ### Install (Docker)
-//To run the sim you will need to install docker from [here](https://docs.docker.com/v17.12/install/) and docker-compose found [here](https://docs.docker.com/compose/install/). You will also need the host computer to have some nvidia driver. The default driver setup is for `nvidia-390`. You can check your driver version in [linux](https://linuxconfig.org/how-to-check-nvidia-driver-version-on-your-linux-system). You will also need [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
-
-//1. Open up a terminal
-//2. Check if docker is running: `docker run hello-world`. If not, run:
-//- Linux:`systemctl start docker` 
-//- Mac: `open /Applications/Docker.app` 
-//- Windows: `restart-service *docker*`  
-//3. Clone this repo: 
+1. Open up a terminal
+2. Check if docker is running: `docker run hello-world`. If not, run:
+ - Linux:`systemctl start docker` 
+ - Mac: `open /Applications/Docker.app` 
+ - Windows: `restart-service *docker*`  
+3. Clone this repo: 
 `git clone https://github.com/prl-mushr/mushr_sim && cd mushr_sim/docker/`
-//4. Using your favorite text editor, change .env to your nvidia driver version number ingoring numbers past decimal and ones digit. For example, 341.2 would become 340
-//5. `docker-compose up -d` This should create a container visible if you type `docker ps`
-//A map with a car model and arrow of the car pose should now be visible in rviz and a small gray window should also appear.
-//9. Give it an initial pose using the "2D Pose Estimate" button at the top of the rviz window. And drive around using the WSDA keys while the small gray window is in focus 
-//10. To enter the container use `docker exec -it <container ID> bash` You will be the developer user. If you need to be root to download additional software run `docker exec -it -u 0 <container ID> bash`.  
-//
+4. Using your favorite text editor, change .env to your nvidia driver version number ingoring numbers past decimal and ones digit. For example, 341.2 would become 340
+ 5. `docker-compose up -d` This should create a container visible if you type `docker ps`
+ A map with a car model and arrow of the car pose should now be visible in rviz and a small gray window should also appear.
+ 9. Give it an initial pose using the "2D Pose Estimate" button at the top of the rviz window. And drive around using the WSDA keys while the small gray window is in focus 
+10. To enter the container use `docker exec -it <container ID> bash` You will be the developer user. If you need to be root to download additional software run `docker exec -it -u 0 <container ID> bash`.  
+ -->
 ### Install (Non-Docker)
-If you don't want to use a docker container on your linux system, you will need the following:  
+You will need the following:  
 - [ROS Melodic](http://wiki.ros.org/melodic/Installation)
 - A [catkin_ws](http://wiki.ros.org/catkin/Tutorials/create_a_workspace)
 - rviz: `sudo apt-get install ros-melodic-rviz`
