@@ -22,7 +22,7 @@ To run the sim you will need to install docker from [here](https://docs.docker.c
  9. Give it an initial pose using the "2D Pose Estimate" button at the top of the rviz window. And drive around using the WSDA keys while the small gray window is in focus 
 10. To enter the container use `docker exec -it <container ID> bash` You will be the developer user. If you need to be root to download additional software run `docker exec -it -u 0 <container ID> bash`.  
  -->
-### Install (Non-Docker)
+### Install
 You will need the following:  
 - [ROS Melodic](http://wiki.ros.org/melodic/Installation)
 - A [catkin_ws](http://wiki.ros.org/catkin/Tutorials/create_a_workspace)
