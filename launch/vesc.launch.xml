@@ -2,6 +2,8 @@
 <launch>
     <arg name="mux_output_topic" default="ackermann_cmd" />
     <arg name="vesc_config" default="$(find mushr_sim)/config/vesc.yaml" />
+    <arg name="car_name"/>
+
     <rosparam file="$(arg vesc_config)" command="load" />
 
     <node pkg="vesc_ackermann" type="ackermann_to_vesc_node" name="ackermann_to_vesc">
@@ -17,5 +19,5 @@
 
     <node pkg="mushr_sim" type="fake_vesc_driver_node.py" name="vesc_driver" />
     <node pkg="vesc_ackermann" type="vesc_to_odom_node" name="vesc_to_odom" />
-    <node pkg="vesc_driver" name="throttle_interpolator" type="throttle_interpolator.py" />
+    <node pkg="vesc_driver" name="throttle_interpolator" type="throttle_interpolator.py" args="$(arg car_name)"/>
 </launch>

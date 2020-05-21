@@ -40,6 +40,7 @@
         <!-- Start electronic speed controller driver -->
         <include file="$(find mushr_sim)/launch/vesc.launch.xml" >
             <arg name="mux_output_topic" value="/$(arg car_name)/mux/ackermann_cmd_mux/output"/>
+            <arg name="car_name" value="$(arg car_name)"/>
         </include>
     </group>
 
