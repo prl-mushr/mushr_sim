@@ -2,11 +2,13 @@
 <launch>
     <arg name="mux_output_topic" default="ackermann_cmd" />
     <arg name="vesc_config" default="$(find mushr_sim)/config/vesc.yaml" />
+    <arg name="car_name" default="car" />
+
     <rosparam file="$(arg vesc_config)" command="load" />
 
     <node pkg="vesc_ackermann" type="ackermann_to_vesc_node" name="ackermann_to_vesc">
         <!-- Remap to make mux control work with the VESC -->
-	<remap from="ackermann_cmd" to="$(arg mux_output_topic)" />
+        <remap from="ackermann_cmd" to="$(arg mux_output_topic)" />
 
         <!-- Remap to make vesc have trapezoidal control on the throttle to avoid skipping -->
         <remap from="commands/motor/speed" to="commands/motor/unsmoothed_speed" />
@@ -17,5 +19,7 @@
 
     <node pkg="mushr_sim" type="fake_vesc_driver_node.py" name="vesc_driver" />
     <node pkg="vesc_ackermann" type="vesc_to_odom_node" name="vesc_to_odom" />
-    <node pkg="vesc_driver" name="throttle_interpolator" type="throttle_interpolator.py" />
+    <node pkg="vesc_driver" name="throttle_interpolator" type="throttle_interpolator.py" >
+        <param name="car_name" value="$(arg car_name)" />
+    </node>
 </launch>
