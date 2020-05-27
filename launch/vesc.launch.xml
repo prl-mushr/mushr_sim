@@ -2,7 +2,7 @@
 <launch>
     <arg name="mux_output_topic" default="ackermann_cmd" />
     <arg name="vesc_config" default="$(find mushr_sim)/config/vesc.yaml" />
-    <arg name="car_name" />
+    <arg name="car_name" default="car" />
 
     <rosparam file="$(arg vesc_config)" command="load" />
 
