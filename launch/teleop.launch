@@ -2,13 +2,17 @@
 <launch>
 
     <!-- Set to 1 if you want to run the map_server -->
-    <arg name="map_server" value = "1" />
+    <arg name="map_server" default = "1" />
+    <!-- Set to 1 if run on gibson simulator -->
+    <arg name="map"  default="$(find mushr_sim)/maps/sandbox.yaml" />
 
     <arg name="car_name" default="car" />
 
     <!-- Launch  map server-->
     <group if="$(arg map_server)">
-        <include file="$(find mushr_sim)/launch/map_server.launch" />
+        <include file="$(find mushr_sim)/launch/map_server.launch">
+            <arg name="map" value="$(arg map)" />
+        </include>
     </group>
 
     <!-- Launch car -->
@@ -21,7 +25,7 @@
             <arg name="racecar_version" value="racecar-uw-nano" />
             <!-- The colors of the racecar, should be of the form "-<platform_color>-<inset_color>" -->
             <!-- An empty string will result in the default URDF -->
-              <!-- Check CMakeLists.txt of mushr_description for appropriate values -->
+            <!-- Check CMakeLists.txt of mushr_description for appropriate values -->
             <arg name="racecar_color" value="" />
 
             <arg name="car_name" value="$(arg car_name)" />
