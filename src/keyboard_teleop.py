@@ -18,124 +18,106 @@ DOWN = "s"
 RIGHT = "d"
 QUIT = "q"
 
-state = [False, False, False, False]
-state_lock = Lock()
-state_pub = None
-root = None
-control = False
 
+class KeyboardTeleop:
+    def __init__(self):
+        self.max_velocity = rospy.get_param("~speed", 2.0)
+        self.max_steering_angle = rospy.get_param("~max_steering_angle", 0.34)
 
-def keyeq(e, c):
-    return e.char == c or e.keysym == c
+        self.keys = [UP, LEFT, DOWN, RIGHT]
+        self.state = [False] * 4  # matching keys
+        self.state_lock = Lock()
 
+        self.state_pub = rospy.Publisher(
+            "mux/ackermann_cmd_mux/input/teleop", AckermannDriveStamped, queue_size=1
+        )
+        rospy.Timer(rospy.Duration(0.1), self.publish_cb)
+        self.root = self.setup_tk()
 
-def keyup(e):
-    global state
-    global control
+    def setup_tk(self):
+        root = Tk()
+        frame = Frame(root, width=100, height=100)
+        frame.bind("<KeyPress>", self.keydown)
+        frame.bind("<KeyRelease>", self.keyup)
+        frame.pack()
+        frame.focus_set()
+        lab_text = [
+            "Focus on this window",
+            "and use the WASD keys",
+            "to drive the car.",
+            "",
+            "Press Q to quit",
+        ]
+        lab = Label(
+            frame,
+            height=10,
+            width=30,
+            text="\n".join(lab_text),
+        )
+        lab.pack()
+        return root
 
-    with state_lock:
-        if keyeq(e, UP):
-            state[0] = False
-        elif keyeq(e, LEFT):
-            state[1] = False
-        elif keyeq(e, DOWN):
-            state[2] = False
-        elif keyeq(e, RIGHT):
-            state[3] = False
-        control = sum(state) > 0
+    def shutdown(self, signum=None, frame=None):
+        self.root.destroy()
+        rospy.signal_shutdown("shutdown")
 
+    @property
+    def control(self):
+        return any(self.state)
 
-def keydown(e):
-    global state
-    global control
+    def keyeq(self, ev, c):
+        return ev.char == c or ev.keysym == c
 
-    with state_lock:
-        if keyeq(e, QUIT):
-            shutdown()
-        elif keyeq(e, UP):
-            state[0] = True
-            state[2] = False
-        elif keyeq(e, LEFT):
-            state[1] = True
-            state[3] = False
-        elif keyeq(e, DOWN):
-            state[2] = True
-            state[0] = False
-        elif keyeq(e, RIGHT):
-            state[3] = True
-            state[1] = False
-        control = sum(state) > 0
+    def keydown(self, ev):
+        with self.state_lock:
+            if self.keyeq(ev, QUIT):
+                self.shutdown()
+            for i, k in enumerate(self.keys):
+                if self.keyeq(ev, k):
+                    self.state[i] = True
+                    # is this next line really necessary?
+                    self.state[(i+2) % len(self.state)] = False
 
+    def keyup(self, ev):
+        with self.state_lock:
+            for i, k in enumerate(self.keys):
+                if self.keyeq(ev, k):
+                    self.state[i] = False
 
-# Up -> linear.x = 1.0
-# Down -> linear.x = -1.0
-# Left ->  angular.z = 1.0
-# Right -> angular.z = -1.0
+    def publish_cb(self, _):
+        with self.state_lock:
+            if not self.control:
+                return
 
+            cmd_up, cmd_left, cmd_down, cmd_right = self.state
 
-def publish_cb(_):
-    with state_lock:
-        if not control:
-            return
-        ack = AckermannDriveStamped()
-        if state[0]:
-            ack.drive.speed = max_velocity
-        elif state[2]:
-            ack.drive.speed = -max_velocity
+            ack = AckermannDriveStamped()
+            if cmd_up:
+                ack.drive.speed = self.max_velocity
+            elif cmd_down:
+                ack.drive.speed = -self.max_velocity
 
-        if state[1]:
-            ack.drive.steering_angle = max_steering_angle
-        elif state[3]:
-            ack.drive.steering_angle = -max_steering_angle
+            if cmd_left:
+                ack.drive.steering_angle = self.max_steering_angle
+            elif cmd_right:
+                ack.drive.steering_angle = -self.max_steering_angle
 
-        if state_pub is not None:
-            state_pub.publish(ack)
-
-
-def exit_func():
-    os.system("xset r on")
-
-
-def shutdown():
-    root.destroy()
-    rospy.signal_shutdown("shutdown")
+            if self.state_pub is not None:
+                self.state_pub.publish(ack)
 
 
 def main():
-    global state_pub
-    global root
-
-    global max_velocity
-    global max_steering_angle
-    max_velocity = rospy.get_param("~speed", 2.0)
-    max_steering_angle = rospy.get_param("~max_steering_angle", 0.34)
-
-    state_pub = rospy.Publisher(
-        "mux/ackermann_cmd_mux/input/teleop", AckermannDriveStamped, queue_size=1
-    )
-    rospy.Timer(rospy.Duration(0.1), publish_cb)
-    atexit.register(exit_func)
+    # Temporarily disable keyboard repeats
+    atexit.register(lambda: os.system("xset r on"))
     os.system("xset r off")
 
-    root = Tk()
-    frame = Frame(root, width=100, height=100)
-    frame.bind("<KeyPress>", keydown)
-    frame.bind("<KeyRelease>", keyup)
-    frame.pack()
-    frame.focus_set()
-    lab = Label(
-        frame,
-        height=10,
-        width=30,
-        text="Focus on this window\nand use the WASD keys\nto drive the car.\n\nPress Q to quit",
-    )
-    lab.pack()
-    print("Press %c to quit" % QUIT)
-    root.mainloop()
+    rospy.init_node("keyboard_teleop", disable_signals=True)
+    teleop = KeyboardTeleop()
+    signal.signal(signal.SIGINT, teleop.shutdown)
+
+    print("Press", QUIT, "to quit")
+    teleop.root.mainloop()
 
 
 if __name__ == "__main__":
-    rospy.init_node("keyboard_teleop", disable_signals=True)
-
-    signal.signal(signal.SIGINT, lambda s, f: shutdown())
     main()
