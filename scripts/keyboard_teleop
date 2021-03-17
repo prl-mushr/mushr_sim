@@ -1,0 +1,27 @@
+#!/usr/bin/env python
+
+# Copyright (c) 2019, The Personal Robotics Lab, The MuSHR Team, The Contributors of MuSHR
+# License: BSD 3-Clause. See LICENSE.md file in root directory.
+
+import os
+import signal
+import atexit
+import rospy
+from mushr_sim.keyboard_teleop import KeyboardTeleop, QUIT
+
+
+def main():
+    # Temporarily disable keyboard repeats
+    atexit.register(lambda: os.system("xset r on"))
+    os.system("xset r off")
+
+    rospy.init_node("keyboard_teleop", disable_signals=True)
+    teleop = KeyboardTeleop()
+    signal.signal(signal.SIGINT, teleop.shutdown)
+
+    print("Press", QUIT, "to quit")
+    teleop.root.mainloop()
+
+
+if __name__ == "__main__":
+    main()

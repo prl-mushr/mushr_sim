@@ -34,10 +34,3 @@ class FakeVescDriver:
         out_msg.data = msg.data
         self.servo_pub.publish(out_msg)
 
-
-if __name__ == "__main__":
-    rospy.init_node("fake_vesc_driver_node")
-
-    fvs = FakeVescDriver()
-
-    rospy.spin()

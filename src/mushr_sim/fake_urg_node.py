@@ -11,7 +11,7 @@ from geometry_msgs.msg import Quaternion
 from nav_msgs.srv import GetMap
 from sensor_msgs.msg import LaserScan
 
-import utils
+from mushr_sim import utils
 
 
 class FakeURGNode:
@@ -56,6 +56,8 @@ class FakeURGNode:
         position, orientation = self.tl.lookupTransform(
             self.TF_PREFIX + "base_link", self.TF_PREFIX + "laser_link", rospy.Time(0)
         )
+
+      
         self.x_offset = position[0]
 
         self.laser_pub = rospy.Publisher("scan", LaserScan, queue_size=1)
@@ -154,10 +156,3 @@ class FakeURGNode:
         map_msg = rospy.ServiceProxy(map_service_name, GetMap)().map
         return map_msg
 
-
-if __name__ == "__main__":
-    rospy.init_node("fake_urg_node")
-
-    furgn = FakeURGNode()
-
-    rospy.spin()

@@ -7,7 +7,10 @@ import atexit
 import os
 import signal
 from threading import Lock
-from Tkinter import Frame, Label, Tk
+try:
+    from Tkinter import Frame, Label, Tk
+except ImportError:
+    from tkinter import Frame, Label, Tk
 
 import rospy
 from ackermann_msgs.msg import AckermannDriveStamped
@@ -104,20 +107,3 @@ class KeyboardTeleop:
 
             if self.state_pub is not None:
                 self.state_pub.publish(ack)
-
-
-def main():
-    # Temporarily disable keyboard repeats
-    atexit.register(lambda: os.system("xset r on"))
-    os.system("xset r off")
-
-    rospy.init_node("keyboard_teleop", disable_signals=True)
-    teleop = KeyboardTeleop()
-    signal.signal(signal.SIGINT, teleop.shutdown)
-
-    print("Press", QUIT, "to quit")
-    teleop.root.mainloop()
-
-
-if __name__ == "__main__":
-    main()
