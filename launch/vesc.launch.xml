@@ -17,7 +17,7 @@
         <remap from="commands/servo/position" to="commands/servo/unsmoothed_position" />
     </node>
 
-    <node pkg="mushr_sim" type="fake_vesc_driver_node.py" name="vesc_driver" />
+    <node pkg="mushr_sim" type="fake_vesc_driver_node" name="vesc_driver" />
     <node pkg="vesc_ackermann" type="vesc_to_odom_node" name="vesc_to_odom" />
     <node pkg="vesc_driver" name="throttle_interpolator" type="throttle_interpolator.py" >
         <param name="car_name" value="$(arg car_name)" />

@@ -2,5 +2,5 @@
 <launch>
     <rosparam command="load" file="$(find mushr_sim)/config/keyboard_teleop.yaml" />
 
-    <node pkg="mushr_sim" type="keyboard_teleop.py" name="keyboard_teleop" />
+    <node pkg="mushr_sim" type="keyboard_teleop" name="keyboard_teleop" />
 </launch>
