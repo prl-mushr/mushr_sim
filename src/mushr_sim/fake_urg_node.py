@@ -47,17 +47,18 @@ class FakeURGNode:
 
         self.tl = tf.TransformListener()
 
-        while not self.tl.frameExists(self.TF_PREFIX + "base_link"):
-            pass
+        rate = rospy.Rate(10.0)
+        while not rospy.is_shutdown():
+            try:
+                position, orientation = self.tl.lookupTransform(
+                    self.TF_PREFIX + "base_link", self.TF_PREFIX + "laser_link", rospy.Time(0)
+                )
+                break
+            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
+                rospy.logwarn_throttle(5, e)
+                rate.sleep()
+                continue
 
-        while not self.tl.frameExists(self.TF_PREFIX + "laser_link"):
-            pass
-
-        position, orientation = self.tl.lookupTransform(
-            self.TF_PREFIX + "base_link", self.TF_PREFIX + "laser_link", rospy.Time(0)
-        )
-
-      
         self.x_offset = position[0]
 
         self.laser_pub = rospy.Publisher("scan", LaserScan, queue_size=1)
@@ -155,4 +156,3 @@ class FakeURGNode:
         rospy.wait_for_service(map_service_name)
         map_msg = rospy.ServiceProxy(map_service_name, GetMap)().map
         return map_msg
-
