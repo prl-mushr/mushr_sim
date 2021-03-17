@@ -25,6 +25,7 @@
             <arg name="racecar_color" value="" />
 
             <arg name="car_name" value="$(arg car_name)" />
+            <arg name="use_tf_prefix" value="false" />
          </include>
     </group>
 

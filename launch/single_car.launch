@@ -1,6 +1,7 @@
 <launch>
 
     <arg name="car_name" default="car" />
+    <arg name="use_tf_prefix" default="true" />
 
     <!-- Could be racecar-mit, racecar-uw-tx2, or racecar-uw-nano -->
     <arg name="racecar_version" default="racecar-uw-nano" />
@@ -19,11 +20,11 @@
 
     <include file="$(find mushr_base)/launch/includes/racecar_state.launch" >
             <arg name="force_in_bounds" value="$(arg force_in_bounds)"/>
-            <arg name="tf_prefix" value="$(arg car_name)" />
+            <arg if="$(arg use_tf_prefix)" name="tf_prefix" value="$(arg car_name)" />
     </include>
 
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="state_publisher">
-        <param name="tf_prefix" value="$(arg car_name)"/>
+        <param if="$(arg use_tf_prefix)" name="tf_prefix" value="$(arg car_name)"/>
         <param name="robot_description" value="/$(arg car_name)/robot_description" />
     </node>
 
@@ -47,7 +48,7 @@
     <!-- Launch sensors -->
     <include file="$(find mushr_sim)/launch/sensors.launch.xml" >
         <arg name="racecar_version" value="$(arg racecar_version)" />
-        <arg name="tf_prefix" value="$(arg car_name)"/>
+        <arg if="$(arg use_tf_prefix)" name="tf_prefix" value="$(arg car_name)"/>
     </include>
 
 </launch>
