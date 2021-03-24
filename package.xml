@@ -15,22 +15,32 @@
   <buildtool_depend condition="$ROS_PYTHON_VERSION == 3">python3-setuptools</buildtool_depend>
     
   <build_depend>roscpp</build_depend>
+  <build_depend>roslaunch</build_depend>
   <build_depend>rospy</build_depend>
   <build_depend>std_msgs</build_depend>
   <build_export_depend>roscpp</build_export_depend>
   <build_export_depend>rospy</build_export_depend>
   <build_export_depend>std_msgs</build_export_depend>
-  <exec_depend>roscpp</exec_depend>
+  <build_export_depend>tf</build_export_depend>
+  <build_export_depend>tf2_ros</build_export_depend>
+  <exec_depend>ackermann_cmd_mux</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend condition="$ROS_PYTHON_VERSION == 2">python-numpy</exec_depend>
+  <exec_depend condition="$ROS_PYTHON_VERSION == 3">python3-numpy</exec_depend>
+  <exec_depend condition="$ROS_PYTHON_VERSION == 2">python-tk</exec_depend>
+  <exec_depend condition="$ROS_PYTHON_VERSION == 3">python3-tk</exec_depend>
+  <exec_depend>map_server</exec_depend>
   <exec_depend>mushr_base</exec_depend>
+  <exec_depend>mushr_description</exec_depend>
+  <exec_depend>nav_msgs</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
   <exec_depend>rospy</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
   <exec_depend>std_msgs</exec_depend>
   <exec_depend>tf</exec_depend>
   <exec_depend>tf2_ros</exec_depend>
-  <exec_depend>mushr_base</exec_depend>
-  <exec_depend>python-numpy</exec_depend>
-  <exec_depend condition="$ROS_PYTHON_VERSION == 2">python-tk</exec_depend>
-  <exec_depend condition="$ROS_PYTHON_VERSION == 3">python3-tk</exec_depend>
   <exec_depend>vesc</exec_depend>
+  <exec_depend>vesc_msgs</exec_depend>
 
   <export>
   </export>

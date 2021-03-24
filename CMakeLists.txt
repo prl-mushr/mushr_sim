@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.0.2)
 project(mushr_sim)
 
 
@@ -23,4 +23,12 @@ catkin_package(
 catkin_install_python(PROGRAMS scripts/fake_urg_node scripts/fake_vesc_driver_node scripts/keyboard_teleop
         DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
-catkin_add_nosetests(test)
+
+if(CATKIN_ENABLE_TESTING)
+  find_package(roslaunch REQUIRED)
+
+  roslaunch_add_file_check(launch)
+
+  catkin_add_nosetests(test)
+
+endif()
