@@ -6,7 +6,7 @@
 import numpy as np
 import range_libc
 import rospy
-import tf
+import tf2_ros
 from geometry_msgs.msg import Quaternion
 from nav_msgs.srv import GetMap
 from sensor_msgs.msg import LaserScan
@@ -45,21 +45,24 @@ class FakeURGNode:
             occ_map, max_range_px, self.THETA_DISCRETIZATION
         )
 
-        self.tl = tf.TransformListener()
+        self._tf_buffer = tf2_ros.Buffer()
+        self.tl = tf2_ros.TransformListener(self._tf_buffer)
 
         rate = rospy.Rate(10.0)
         while not rospy.is_shutdown():
             try:
-                position, orientation = self.tl.lookupTransform(
+                transform = self._tf_buffer.lookup_transform(
                     self.TF_PREFIX + "base_link", self.TF_PREFIX + "laser_link", rospy.Time(0)
                 )
+                # Drop stamp header
+                transform = transform.transform
                 break
-            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
+            except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException) as e:
                 rospy.logwarn_throttle(5, e)
                 rate.sleep()
                 continue
 
-        self.x_offset = position[0]
+        self.x_offset = transform.translation.x
 
         self.laser_pub = rospy.Publisher("scan", LaserScan, queue_size=1)
 
@@ -126,21 +129,19 @@ class FakeURGNode:
         ranges = np.zeros(len(self.ANGLES) * 1, dtype=np.float32)
 
         try:
-            base_to_map_trans, base_to_map_rot = self.tl.lookupTransform(
-                "/map", self.TF_PREFIX + "base_link", rospy.Time(0)
+            transform = self._tf_buffer.lookup_transform(
+                "map", self.TF_PREFIX + "base_link", rospy.Time(0)
             )
-        except Exception:
+            # Drop stamp header
+            transform = transform.transform
+        except Exception as e:
+            rospy.logwarn_throttle(10, e)
+            rospy.logwarn_throttle(10, "Failed to get map->base_link transform. Dropping laser scan data")
             return
 
-        laser_quat = Quaternion()
-        laser_quat.x = base_to_map_rot[0]
-        laser_quat.y = base_to_map_rot[1]
-        laser_quat.z = base_to_map_rot[2]
-        laser_quat.w = base_to_map_rot[3]
-
-        laser_angle = utils.quaternion_to_angle(laser_quat)
-        laser_pose_x = base_to_map_trans[0] + self.x_offset * np.cos(laser_angle)
-        laser_pose_y = base_to_map_trans[1] + self.x_offset * np.sin(laser_angle)
+        laser_angle = utils.quaternion_to_angle(transform.rotation)
+        laser_pose_x = transform.translation.x + self.x_offset * np.cos(laser_angle)
+        laser_pose_y = transform.translation.y + self.x_offset * np.sin(laser_angle)
 
         range_pose = np.array(
             (laser_pose_x, laser_pose_y, laser_angle), dtype=np.float32
