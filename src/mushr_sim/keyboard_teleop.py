@@ -15,11 +15,13 @@ except ImportError:
 import rospy
 from ackermann_msgs.msg import AckermannDriveStamped
 
-UP = "w"
-LEFT = "a"
-DOWN = "s"
-RIGHT = "d"
-QUIT = "q"
+# Keycodes for WASD on a standard keyboard with querty labels
+# We use keycodes instead of Tkinter's convenience symbol
+# because it makes us more robust to accidental caps locks
+# or alternative keyboard layouts.
+keycodes = [25, 38 ,39 ,40]
+# Q key on a standard keyboard with qwerty labels
+quit_keycode = 24
 
 
 class KeyboardTeleop:
@@ -27,7 +29,8 @@ class KeyboardTeleop:
         self.max_velocity = rospy.get_param("~speed", 2.0)
         self.max_steering_angle = rospy.get_param("~max_steering_angle", 0.34)
 
-        self.keys = [UP, LEFT, DOWN, RIGHT]
+        self.quit_key = quit_keycode
+        self.keycodes = keycodes
         self.state = [False] * 4  # matching keys
         self.state_lock = Lock()
 
@@ -61,21 +64,22 @@ class KeyboardTeleop:
         return root
 
     def shutdown(self, signum=None, frame=None):
-        self.root.destroy()
-        rospy.signal_shutdown("shutdown")
+        rospy.logerr("Got shutdown")
+        self.root.quit()
+        self.root.update()
 
     @property
     def control(self):
         return any(self.state)
 
-    def keyeq(self, ev, c):
-        return ev.char == c or ev.keysym == c
+    def keyeq(self, ev, code):
+        return ev.keycode == code
 
     def keydown(self, ev):
         with self.state_lock:
-            if self.keyeq(ev, QUIT):
+            if self.keyeq(ev, self.quit_key):
                 self.shutdown()
-            for i, k in enumerate(self.keys):
+            for i, k in enumerate(self.keycodes):
                 if self.keyeq(ev, k):
                     self.state[i] = True
                     # is this next line really necessary?
@@ -83,7 +87,7 @@ class KeyboardTeleop:
 
     def keyup(self, ev):
         with self.state_lock:
-            for i, k in enumerate(self.keys):
+            for i, k in enumerate(self.keycodes):
                 if self.keyeq(ev, k):
                     self.state[i] = False
 

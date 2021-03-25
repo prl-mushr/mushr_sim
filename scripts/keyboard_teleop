@@ -7,20 +7,31 @@ import os
 import signal
 import atexit
 import rospy
-from mushr_sim.keyboard_teleop import KeyboardTeleop, QUIT
+from threading import Thread
+from mushr_sim.keyboard_teleop import KeyboardTeleop
+
+
+class TeleopThread(Thread):
+    def __init__(self):
+        super(TeleopThread, self).__init__()
+
+    def run(self):
+        # Temporarily disable keyboard repeats
+        os.system("xset r off")
+        self.teleop = KeyboardTeleop()
+        self.teleop.root.mainloop()
 
 
 def main():
-    # Temporarily disable keyboard repeats
-    atexit.register(lambda: os.system("xset r on"))
-    os.system("xset r off")
-
     rospy.init_node("keyboard_teleop", disable_signals=True)
-    teleop = KeyboardTeleop()
-    signal.signal(signal.SIGINT, teleop.shutdown)
 
-    print("Press", QUIT, "to quit")
-    teleop.root.mainloop()
+    # Reenable key repeats on exit
+    atexit.register(lambda: os.system("xset r on"))
+
+    teleop_thread = TeleopThread()
+    signal.signal(signal.SIGINT, lambda x, y: teleop_thread.teleop.shutdown())
+    teleop_thread.start()
+    print("Press Q to quit")
 
 
 if __name__ == "__main__":
