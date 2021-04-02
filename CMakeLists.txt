@@ -13,6 +13,8 @@ catkin_package()
 catkin_install_python(PROGRAMS scripts/fake_urg_node scripts/fake_vesc_driver_node scripts/keyboard_teleop
         DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
+install(DIRECTORY config launch maps
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
 if(CATKIN_ENABLE_TESTING)
   find_package(roslaunch REQUIRED)
