@@ -8,7 +8,7 @@
 
     <!-- Launch  map server-->
     <group if="$(arg map_server)">
-        <include file="$(find mushr_sim)/launch/map_server.launch" />
+        <include file="$(find mushr_base)/launch/includes/map_server.launch" />
     </group>
 
     <!-- Launch car -->
