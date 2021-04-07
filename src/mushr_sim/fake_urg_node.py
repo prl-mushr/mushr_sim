@@ -49,6 +49,9 @@ class FakeURGNode:
         self.tl = tf2_ros.TransformListener(self._tf_buffer)
 
         rate = rospy.Rate(10.0)
+        # It almost always takes one cycle before the transforms arrive, so we'll wait
+        # a bit by default
+        rate.sleep()
         while not rospy.is_shutdown():
             try:
                 transform = self._tf_buffer.lookup_transform(
