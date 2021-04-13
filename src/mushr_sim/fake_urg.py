@@ -9,13 +9,14 @@ import rospy
 import tf2_ros
 from geometry_msgs.msg import Quaternion
 from nav_msgs.srv import GetMap
+from geometry_msgs.msg import Transform
 from sensor_msgs.msg import LaserScan
 
 from mushr_sim import utils
 
 
 class FakeURGNode:
-    def __init__(self):
+    def __init__(self, map_msg, topic_namespace=""):
 
         self.UPDATE_RATE = float(rospy.get_param("~update_rate", 10.0))
         self.THETA_DISCRETIZATION = float(rospy.get_param("~theta_discretization", 656))
@@ -38,7 +39,6 @@ class FakeURGNode:
         if len(self.TF_PREFIX) > 0:
             self.TF_PREFIX = self.TF_PREFIX + "/"
 
-        map_msg = self.get_map()
         occ_map = range_libc.PyOMap(map_msg)
         max_range_px = int(self.MAX_RANGE_METERS / map_msg.info.resolution)
         self.range_method = range_libc.PyCDDTCast(
@@ -67,11 +67,14 @@ class FakeURGNode:
 
         self.x_offset = transform.translation.x
 
-        self.laser_pub = rospy.Publisher("scan", LaserScan, queue_size=1)
+        self.laser_pub = rospy.Publisher("~{}scan".format(topic_namespace), LaserScan, queue_size=1)
 
         self.update_timer = rospy.Timer(
             rospy.Duration.from_sec(1.0 / self.UPDATE_RATE), self.timer_cb
         )
+        # Start at 0,0,0
+        self.transform = Transform()
+        self.transform.rotation.w = 1
 
     def noise_laser_scan(self, ranges):
         indices = np.zeros(ranges.shape[0], dtype=np.int)
@@ -131,20 +134,9 @@ class FakeURGNode:
 
         ranges = np.zeros(len(self.ANGLES) * 1, dtype=np.float32)
 
-        try:
-            transform = self._tf_buffer.lookup_transform(
-                "map", self.TF_PREFIX + "base_link", rospy.Time(0)
-            )
-            # Drop stamp header
-            transform = transform.transform
-        except Exception as e:
-            rospy.logwarn_throttle(10, e)
-            rospy.logwarn_throttle(10, "Failed to get map->base_link transform. Dropping laser scan data")
-            return
-
-        laser_angle = utils.quaternion_to_angle(transform.rotation)
-        laser_pose_x = transform.translation.x + self.x_offset * np.cos(laser_angle)
-        laser_pose_y = transform.translation.y + self.x_offset * np.sin(laser_angle)
+        laser_angle = utils.quaternion_to_angle(self.transform.rotation)
+        laser_pose_x = self.transform.translation.x + self.x_offset * np.cos(laser_angle)
+        laser_pose_y = self.transform.translation.y + self.x_offset * np.sin(laser_angle)
 
         range_pose = np.array(
             (laser_pose_x, laser_pose_y, laser_angle), dtype=np.float32
@@ -154,9 +146,3 @@ class FakeURGNode:
         ls.ranges = ranges.tolist()
         self.laser_pub.publish(ls)
 
-    def get_map(self):
-        # Use the 'static_map' service (launched by MapServer.launch) to get the map
-        map_service_name = rospy.get_param("~static_map", "/static_map")
-        rospy.wait_for_service(map_service_name)
-        map_msg = rospy.ServiceProxy(map_service_name, GetMap)().map
-        return map_msg
