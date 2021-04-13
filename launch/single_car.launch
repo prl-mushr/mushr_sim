@@ -2,6 +2,7 @@
 
     <arg name="car_name" default="car" />
     <arg name="use_tf_prefix" default="true" />
+    <arg name="fake_localization" default="true" />
 
     <!-- Could be racecar-mit, racecar-uw-tx2, or racecar-uw-nano -->
     <arg name="racecar_version" default="racecar-uw-nano" />
@@ -11,15 +12,26 @@
     <!-- Check CMakeLists.txt of mushr_description for appropriate values -->
     <arg name="racecar_color" default=""/>
 
-    <!-- If the robot will abide by map_server walls -->
-    <arg name="force_in_bounds" value = "1"/>
+    <!-- Launch model/state publishers-->
+    <group if="$(arg fake_localization)">
+        <group if="$(arg use_tf_prefix)">
+            <node pkg="fake_localization" type="fake_localization" name="fake_localization">
+                <remap from="base_pose_ground_truth" to="/mushr_sim/car/odom" />
+                <param name="base_frame_id" value="base_footprint"/>
+            </node>
+        </group>
+        <group unless="$(arg use_tf_prefix)">
+            <node pkg="fake_localization" type="fake_localization" name="fake_localization">
+                <remap from="base_pose_ground_truth" to="/mushr_sim/car/odom" />
+                <param name="base_frame_id" value="base_footprint"/>
+            </node>
+        </group>
+    </group>
 
-    <!-- Launch  model/state publishers-->
     <param name="robot_description"
          textfile="$(find mushr_description)/robots/$(arg racecar_version)$(arg racecar_color).urdf"/>
 
     <include file="$(find mushr_base)/launch/includes/racecar_state.launch" >
-            <arg name="force_in_bounds" value="$(arg force_in_bounds)"/>
             <arg if="$(arg use_tf_prefix)" name="tf_prefix" value="$(arg car_name)" />
     </include>
 
@@ -28,9 +40,7 @@
         <param name="robot_description" value="/$(arg car_name)/robot_description" />
     </node>
 
-
     <include file="$(find mushr_sim)/launch/keyboard_teleop.launch.xml" />
-
 
     <group ns="mux">
         <!-- Spawn MUXs -->
@@ -45,10 +55,6 @@
         </include>
     </group>
 
-    <!-- Launch sensors -->
-    <include file="$(find mushr_sim)/launch/sensors.launch.xml" >
-        <arg name="racecar_version" value="$(arg racecar_version)" />
-        <arg if="$(arg use_tf_prefix)" name="tf_prefix" value="$(arg car_name)"/>
-    </include>
+
 
 </launch>

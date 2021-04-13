@@ -17,7 +17,6 @@
     </group>
 
     <!-- Launch car -->
-
     <group ns="$(arg car_name)">
         <remap from="/$(arg car_name)/initialpose" to="/initialpose" />
 

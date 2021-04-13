@@ -15,7 +15,7 @@ from sensor_msgs.msg import LaserScan
 from mushr_sim import utils
 
 
-class FakeURGNode:
+class FakeURG:
     def __init__(self, map_msg, topic_namespace=""):
 
         self.UPDATE_RATE = float(rospy.get_param("~update_rate", 10.0))

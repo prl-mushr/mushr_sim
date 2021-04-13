@@ -10,7 +10,7 @@ catkin_python_setup()
 
 catkin_package()
 
-catkin_install_python(PROGRAMS scripts/fake_urg_node scripts/fake_vesc_driver_node scripts/keyboard_teleop
+catkin_install_python(PROGRAMS scripts/clicked_point_to_reposition scripts/fake_vesc_driver_node scripts/keyboard_teleop scripts/mushr_sim
         DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 install(DIRECTORY config launch maps

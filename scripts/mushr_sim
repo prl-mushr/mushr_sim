@@ -4,12 +4,12 @@
 # License: BSD 3-Clause. See LICENSE.md file in root directory.
 
 import rospy
-from mushr_sim.fake_vesc_driver import FakeVescDriver
+from mushr_sim.mushr_sim import MushrSim
 
 if __name__ == "__main__":
-    rospy.init_node("fake_vesc_driver_node")
+    rospy.init_node("mushr_sim")
 
-    fvs = FakeVescDriver()
+    fvs = MushrSim()
 
     rospy.spin()
 

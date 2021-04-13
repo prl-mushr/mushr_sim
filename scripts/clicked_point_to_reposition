@@ -6,11 +6,13 @@
 import rospy
 from geometry_msgs.msg import PoseStamped, PointStamped
 
+
 def point_clicked_cb(msg):
     as_pose = PoseStamped(header=msg.header)
-    as_pose.pose.position = msg.point.position
-    as_pose.pose.rotation.w = 1
+    as_pose.pose.position = msg.point
+    as_pose.pose.orientation.w = 1
     pub.publish(as_pose)
+
 
 if __name__ == "__main__":
     rospy.init_node("point_clicked_to_reposition")
@@ -19,4 +21,3 @@ if __name__ == "__main__":
     pub = rospy.Publisher("/reposition", PoseStamped, queue_size=1)
 
     rospy.spin()
-
