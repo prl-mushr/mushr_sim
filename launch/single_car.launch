@@ -3,6 +3,7 @@
     <arg name="car_name" default="car" />
     <arg name="use_tf_prefix" default="true" />
     <arg name="fake_localization" default="true" />
+    <arg name="teleop" default="true" />
 
     <!-- Could be racecar-mit, racecar-uw-tx2, or racecar-uw-nano -->
     <arg name="racecar_version" default="racecar-uw-nano" />
@@ -40,7 +41,7 @@
         <param name="robot_description" value="/$(arg car_name)/robot_description" />
     </node>
 
-    <include file="$(find mushr_sim)/launch/keyboard_teleop.launch.xml" />
+    <include if="$(arg teleop)" file="$(find mushr_sim)/launch/keyboard_teleop.launch.xml" />
 
     <group ns="mux">
         <!-- Spawn MUXs -->

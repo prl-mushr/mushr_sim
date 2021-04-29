@@ -13,6 +13,7 @@ from nav_msgs.srv import GetMap
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Float64
 from vesc_msgs.msg import VescStateStamped
+from mushr_sim.srv import CarPose
 
 """
 Publishes joint and tf information about the racecar
@@ -188,6 +189,8 @@ class MushrSim:
             rospy.Duration.from_sec(1.0 / self.UPDATE_RATE), self.timer_cb
         )
 
+        self._car_reposition_srv = rospy.Service("~reposition", CarPose, self._car_reposition_cb)
+
     """
     clip_angle: Clip an angle to be between -pi and pi
       val: Angle in radians
@@ -208,7 +211,6 @@ class MushrSim:
     """
 
     def init_pose_cb(self, msg):
-
         # Get the pose of the car w.r.t the map in meters
         rx_trans = np.array(
             [msg.pose.position.x, msg.pose.position.y], dtype=np.float
@@ -220,28 +222,27 @@ class MushrSim:
             map_rx_pose = utils.world_to_map(
                 (rx_trans[0], rx_trans[1], rx_rot), self.map_info
             )
+            # Update the pose of the car if either bounds checking is not enabled,
+            # or bounds checking is enabled but the car is in-bounds
+            if not self._check_position_in_bounds(map_rx_pose[0], map_rx_pose[1]):
+                rospy.logwarn("Requested reposition into obstacle. Ignoring.")
+                return
 
-        # Update the pose of the car if either bounds checking is not enabled,
-        # or bounds checking is enabled but the car is in-bounds
-        if not (
-                self.permissible_region is None
-                or self.permissible_region[
-                    int(map_rx_pose[1] + 0.5), int(map_rx_pose[0] + 0.5)
+        with self.cur_odom_to_base_lock:
+            # Move the vehicle by updating the odom->base transform
+            self.cur_odom_to_base_trans = rx_trans
+            self.cur_odom_to_base_rot = rx_rot
+
+    def _check_position_in_bounds(self, x, y):
+        if self.permissible_region is None:
+            return True
+        return (
+                0 <= x < self.permissible_region.shape[1] and \
+                0 <= y < self.permissible_region.shape[0] and \
+                self.permissible_region[
+                    int(y + 0.5), int(x + 0.5)
                 ]
-                == 1
-        ):
-            rospy.logwarn("Requested reposition into obstacle. Ignoring.")
-            return
-
-        self.cur_odom_to_base_lock.acquire()
-
-        # Move the vehicle by updating the odom->base transform
-        self.cur_odom_to_base_trans = np.zeros(2, dtype=np.float)
-        self.cur_odom_to_base_trans[0] = msg.pose.position.x
-        self.cur_odom_to_base_trans[1] = msg.pose.position.y
-        self.cur_odom_to_base_rot = rx_rot
-
-        self.cur_odom_to_base_lock.release()
+        )
 
     """
     speed_cb: Callback to capture the speed of the car
@@ -284,20 +285,19 @@ class MushrSim:
         dt = (now - self.last_stamp).to_sec()
 
         # Add noise to the speed
-        self.last_speed_lock.acquire()
-        v = self.last_speed + np.random.normal(
-            loc=self.SPEED_OFFSET * self.last_speed, scale=self.SPEED_NOISE, size=1
-        )
-        self.last_speed_lock.release()
+        with self.last_speed_lock:
+            v = self.last_speed + np.random.normal(
+                loc=self.SPEED_OFFSET * self.last_speed, scale=self.SPEED_NOISE, size=1
+            )
+
 
         # Add noise to the steering angle
-        self.last_steering_angle_lock.acquire()
-        delta = self.last_steering_angle + np.random.normal(
-            loc=self.STEERING_ANGLE_OFFSET * self.last_steering_angle,
-            scale=self.STEERING_ANGLE_NOISE,
-            size=1,
-        )
-        self.last_steering_angle_lock.release()
+        with self.last_steering_angle_lock:
+            delta = self.last_steering_angle + np.random.normal(
+                loc=self.STEERING_ANGLE_OFFSET * self.last_steering_angle,
+                scale=self.STEERING_ANGLE_NOISE,
+                size=1,
+            )
 
         self.cur_odom_to_base_lock.acquire()
 
@@ -404,13 +404,7 @@ class MushrSim:
             # Get the new pose w.r.t the map in pixels
             if self.map_info is not None:
                 new_map_pose = utils.world_to_map(new_map_pose, self.map_info)
-
-            new_map_pose_x = int(new_map_pose[0] + 0.5)
-            new_map_pose_y = int(new_map_pose[1] + 0.5)
-            in_bounds = \
-                0 <= new_map_pose_x < self.permissible_region.shape[1] and \
-                0 <= new_map_pose_y < self.permissible_region.shape[0] and \
-                self.permissible_region[new_map_pose_y, new_map_pose_x] == 1
+                in_bounds = self._check_position_in_bounds(new_map_pose[0], new_map_pose[1])
 
         if in_bounds:
             # Update pose of base_footprint w.r.t odom
@@ -478,6 +472,34 @@ class MushrSim:
         odom_msg.twist.twist.angular.z = dtheta
 
         self.odom_pub.publish(odom_msg)
+
+    def _car_reposition_cb(self, request):
+        # Get the pose of the car w.r.t the map in meters
+        rx_trans = np.array(
+            [request.x, request.y], dtype=np.float
+        )
+        rx_rot = request.theta
+
+        # Get the pose of the car w.r.t the map in pixels
+        if self.map_info is not None:
+            map_rx_pose = utils.world_to_map(
+                (rx_trans[0], rx_trans[1], rx_rot), self.map_info
+            )
+            # Update the pose of the car if either bounds checking is not enabled,
+            # or bounds checking is enabled but the car is in-bounds
+            if not self._check_position_in_bounds(map_rx_pose[0], map_rx_pose[1]):
+                rospy.logwarn("Requested reposition into obstacle. Ignoring.")
+                return
+
+        with self.cur_odom_to_base_lock:
+            # Move the vehicle by updating the odom->base transform
+            self.cur_odom_to_base_trans = rx_trans
+            self.cur_odom_to_base_rot = rx_rot
+
+        with self.cur_odom_to_base_lock:
+            self.cur_odom_to_base_trans = np.array([request.x, request.y], dtype=np.float)
+            self.cur_odom_to_base_rot = request.theta
+        return True
 
     """
     get_map: Get the map and map meta data
