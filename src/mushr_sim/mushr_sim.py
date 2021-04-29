@@ -172,7 +172,7 @@ class MushrSim:
         self.cur_joints_pub = rospy.Publisher("~{}/joint_states".format(CAR_NAME), JointState, queue_size=1)
 
         # Subscribes to the initial pose of the car
-        self.init_pose_sub = rospy.Subscriber("reposition", PoseStamped, self.init_pose_cb, queue_size=1)
+        self.init_pose_sub = rospy.Subscriber("~reposition", PoseStamped, self.init_pose_cb, queue_size=1)
 
         # Subscribes to info about the bldc (particularly the speed in rpm)
         self.speed_sub = rospy.Subscriber(

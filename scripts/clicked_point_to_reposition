@@ -18,6 +18,6 @@ if __name__ == "__main__":
     rospy.init_node("point_clicked_to_reposition")
 
     sub = rospy.Subscriber("/clicked_point", PointStamped, point_clicked_cb, queue_size=1)
-    pub = rospy.Publisher("/reposition", PoseStamped, queue_size=1)
+    pub = rospy.Publisher("~reposition", PoseStamped, queue_size=1)
 
     rospy.spin()
