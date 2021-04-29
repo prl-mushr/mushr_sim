@@ -23,6 +23,7 @@
             <arg name="initial_y" value="$(arg initial_y)"/>
             <arg name="initial_theta" value="$(arg initial_theta)"/>
             <arg name="use_tf_prefix" value="$(arg use_tf_prefix)" />
+            <arg name="teleop" value="$(arg teleop)" />
         </include>
     </group>
 
