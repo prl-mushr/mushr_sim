@@ -36,35 +36,35 @@ Topic | Type | Description
 
 python dependencies: 
 1) numpy
-```
-pip install numpy
+``` bash
+$ pip install numpy
 ```
 
 ### Running the base example:
 terminal command:
-```
-cd ~/catkin_ws/src/mushr_sim/unity
-./donkey_sim.x86_64 -batchmode
+``` bash
+$ cd ~/catkin_ws/src/mushr_sim/unity
+$ ./donkey_sim.x86_64 -batchmode
 ```
 If you have nvidia driver support on your linux machine (god bless), you can run it without the "-batchmode" tag. The tag makes the sim run in the headless mode which allows for higher fps if you don't have said driver support.
 
 In a new tab:
-```
-roslaunch mushr_sim unity_multi.launch
+``` bash
+$ roslaunch mushr_sim unity_multi.launch
 ```
 In another new tab:
-```
-rosrun rviz rviz
+``` bash
+$ rosrun rviz rviz
 ```
 To visualize the simulation in rviz, use the rviz config in 
-```
-~/mushr_sim/rviz/unity_backend.rviz
+``` bash
+$ ~/mushr_sim/rviz/unity_backend.rviz
 ```
 You should see 4 cars by default. The poses of these cars are set by the pose_init.py file. The car's initial pose is set the same way as done for the default mushr_sim; by publishing a message on the /car_name/initialpose topic. 
 
 if you want to have only one car, you can launch unity_single.launch instead:
-```
-roslaunch mushr_sim unity_single.launch
+``` bash
+$ roslaunch mushr_sim unity_single.launch
 ```
 change the robot description topic from `/car1/robot_description` to `/robot_description`
 
