@@ -62,6 +62,12 @@ To visualize the simulation in rviz, use the rviz config in
 ```
 You should see 4 cars by default. The poses of these cars are set by the pose_init.py file. The car's initial pose is set the same way as done for the default mushr_sim; by publishing a message on the /car_name/initialpose topic. 
 
+if you want to have only one car, you can launch unity_single.launch instead:
+```
+roslaunch mushr_sim unity_single.launch
+```
+change the robot description topic from `/car1/robot_description` to `/robot_description`
+
 As it has the same interface as the default mushr_sim multi_teleop.launch, you should be able to drive the cars with the WASD keys.
 
 Note that collisions between the cars will also be simulated (try not to collide though. The purpose was simply to make the simulation somewhat interesting). 
