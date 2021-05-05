@@ -18,6 +18,7 @@
     <group ns="$(arg car_name)">
         <include file="$(find mushr_sim)/launch/single_car.launch">
             <arg name="racecar_version" value="$(arg racecar_version)" />
+            <arg name="fake_localization" value="$(arg fake_localization)" />
             <arg name="racecar_color" value="$(arg racecar_color)" />
             <arg name="initial_x" value="$(arg initial_x)"/>
             <arg name="initial_y" value="$(arg initial_y)"/>
