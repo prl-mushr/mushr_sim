@@ -66,7 +66,6 @@ class KeyboardTeleop:
         return root
 
     def shutdown(self, signum=None, frame=None):
-        rospy.logerr("Got shutdown")
         self.root.quit()
         self.root.update()
 

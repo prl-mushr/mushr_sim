@@ -4,7 +4,6 @@
 # License: BSD 3-Clause. See LICENSE.md file in root directory.
 
 import os
-import signal
 import atexit
 import rospy
 from threading import Thread
@@ -19,19 +18,28 @@ class TeleopThread(Thread):
         # Temporarily disable keyboard repeats
         os.system("xset r off")
         self.teleop = KeyboardTeleop()
+        self.teleop.root.protocol("WM_DELETE_WINDOW", lambda: rospy.signal_shutdown("Window closed manually"))
         self.teleop.root.mainloop()
+
+    def shutdown(self):
+        self.teleop.root.quit()
+        super(TeleopThread, self).shutdown()
 
 
 def main():
-    rospy.init_node("keyboard_teleop", disable_signals=True)
+    rospy.init_node("keyboard_teleop")
 
     # Reenable key repeats on exit
     atexit.register(lambda: os.system("xset r on"))
 
     teleop_thread = TeleopThread()
-    signal.signal(signal.SIGINT, lambda x, y: teleop_thread.teleop.shutdown())
     teleop_thread.start()
     print("Press Q to quit")
+    # Spin the main thread
+    rospy.spin()
+    # We either got SIGINT from control-C or ROS is otherwise coming down.
+    # Kill the GUI on the way out
+    teleop_thread.teleop.shutdown()
 
 
 if __name__ == "__main__":
