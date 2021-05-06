@@ -131,7 +131,8 @@ class MushrSim:
 
         # The most recent transform from odom to base_footprint
         self.cur_odom_to_base_trans = np.array([initial_x, initial_y], dtype=np.float)
-        self.cur_odom_to_base_rot = initial_theta
+        self.cur_odom_to_base_trans = np.nan_to_num(self.cur_odom_to_base_trans)
+        self.cur_odom_to_base_rot = np.nan_to_num(initial_theta)
         self.cur_odom_to_base_lock = Lock()
 
         # Internal transform from the map to odom
