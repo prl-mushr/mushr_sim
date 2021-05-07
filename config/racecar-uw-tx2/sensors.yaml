@@ -1,4 +1,4 @@
-laser_node:
+fake_urg:
   angle_min: -3.14159
   angle_max: 3.14159 
   angle_step: 0.00872665

@@ -74,3 +74,12 @@ def world_to_map(pose, map_info):
     map_pose[2] += angle
 
     return map_pose
+
+
+def wrap_angle(val):
+    """
+    Clip an angle to be between -pi and pi
+      val: Angle in radians
+      Returns: Equivalent angle between -pi and pi (rad)
+    """
+    return np.fmod(val + np.pi, 2 * np.pi) - np.pi

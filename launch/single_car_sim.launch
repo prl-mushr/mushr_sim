@@ -20,9 +20,6 @@
             <arg name="racecar_version" value="$(arg racecar_version)" />
             <arg name="fake_localization" value="$(arg fake_localization)" />
             <arg name="racecar_color" value="$(arg racecar_color)" />
-            <arg name="initial_x" value="$(arg initial_x)"/>
-            <arg name="initial_y" value="$(arg initial_y)"/>
-            <arg name="initial_theta" value="$(arg initial_theta)"/>
             <arg name="use_tf_prefix" value="$(arg use_tf_prefix)" />
             <arg name="teleop" value="$(arg teleop)" />
         </include>
@@ -32,17 +29,18 @@
          <remap from="~reposition" to="/mushr_sim/reposition" />
     </node>
     <node pkg="mushr_sim" type="mushr_sim" name="mushr_sim">
-        <param name="n_cars" value="1"/>
-        <param name="car_names" value="['$(arg car_name)']"/>
-        <param name="initial_x" value="$(arg initial_x)"/>
-        <param name="initial_y" value="$(arg initial_y)"/>
-        <param name="initial_theta" value="$(arg initial_theta)"/>
+        <param name="use_tf_prefix" value="$(arg use_tf_prefix)" />
+        <rosparam param="car_names" subst_value="True">['$(arg car_name)']</rosparam>
+        <param name="$(arg car_name)/initial_x" value="$(arg initial_x)"/>
+        <param name="$(arg car_name)/initial_y" value="$(arg initial_y)"/>
+        <param name="$(arg car_name)/initial_theta" value="$(arg initial_theta)"/>
 
         <remap from="~$(arg car_name)/scan" to="/$(arg car_name)/scan" />
         <remap from="~$(arg car_name)/joint_states" to="/$(arg car_name)/joint_states"/>
         <remap from="~$(arg car_name)/car_pose" to="/$(arg car_name)/car_pose"/>
+
+        <rosparam command="load" file="$(find mushr_sim)/config/mushr_sim.yaml" />
+        <rosparam command="load" file="$(find mushr_sim)/config/$(arg racecar_version)/sensors.yaml" />
     </node>
-
-
 
 </launch>
