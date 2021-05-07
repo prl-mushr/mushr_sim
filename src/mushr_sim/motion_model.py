@@ -48,7 +48,7 @@ class KinematicCarMotionModel:
         car_length, car_width, wheel_radius = self.car_length, self.car_width, self.car_wheel_radius
         changes = np.empty_like(states, dtype=float)
         num_states = states.shape[0]
-        joint_changes = np.empty((num_states, 4), dtype=float)
+
         vel, delta = controls[:, 0], controls[:, 1]
         theta = states[:, 2]
 
@@ -57,10 +57,6 @@ class KinematicCarMotionModel:
         dtheta = changes[:, 2]
         changes[:, 0] = vel * np.cos(theta) * dt
         changes[:, 1] = vel * np.sin(theta) * dt
-
-        # New joint values
-        joint_changes[:, 1] = vel * dt / wheel_radius
-        joint_changes[:, 2:] = 0
 
         val_indices = np.abs(delta) >= delta_threshold
         val_theta = theta[val_indices]
@@ -76,31 +72,38 @@ class KinematicCarMotionModel:
         # New joint values
         half_width = 0.5 * car_width
         # Applt kinematic car model to compute wheel deltas
-        h_val = np.zeros_like(theta)
-        h_val[val_indices] = (car_length / tan_delta[val_indices]) - (car_width / 2.0)
+        h = np.zeros_like(theta)
+        h[val_indices] = (car_length / tan_delta[val_indices]) - (car_width / 2.0)
+
         joint_outer_throttle = (
-                ((car_width + h_val) / (half_width + h_val))
+                ((car_width + h) / (half_width + h))
                 * vel
                 * dt
                 / wheel_radius
         )
         joint_inner_throttle = (
-                ((h_val) / (half_width + h_val))
+                ((h) / (half_width + h))
                 * vel
                 * dt
                 / wheel_radius
         )
-        joint_outer_steer = np.arctan2(car_length, car_width + h_val)
-        joint_inner_steer = np.arctan2(car_length, h_val)
+        joint_outer_steer = np.arctan2(car_length, car_width + h)
+        joint_inner_steer = np.arctan2(car_length, h)
+
+        # New joint values
+        joint_changes = np.empty((num_states, 4), dtype=float)
+        joint_changes[:, :2] = vel * dt / wheel_radius
+        joint_changes[:, 2:] = 0
 
         # Assign joint values according to whether we are turning left or right
-        joint_changes[:, 0] = joint_inner_throttle
-        joint_changes[:, 1] = joint_outer_throttle
-        joint_changes[:, 2] = joint_inner_steer
-        joint_changes[:, 3] = joint_outer_steer
+        right_ind = np.logical_and(val_indices, delta > 0.0)
+        joint_changes[right_ind, 0] = joint_inner_throttle
+        joint_changes[right_ind, 1] = joint_outer_throttle
+        joint_changes[right_ind, 2] = joint_inner_steer
+        joint_changes[right_ind, 3] = joint_outer_steer
 
         # Left turn
-        left_ind = delta < 0.0
+        left_ind = np.logical_and(val_indices, delta < 0.0)
         joint_changes[left_ind, 0] = joint_outer_throttle[left_ind]
         joint_changes[left_ind, 1] = joint_inner_throttle[left_ind]
         joint_changes[left_ind, 2] = joint_outer_steer[left_ind] - np.pi

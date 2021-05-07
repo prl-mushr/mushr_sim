@@ -36,7 +36,6 @@
         <param name="$(arg car_name)/initial_theta" value="$(arg initial_theta)"/>
 
         <remap from="~$(arg car_name)/scan" to="/$(arg car_name)/scan" />
-        <remap from="~$(arg car_name)/joint_states" to="/$(arg car_name)/joint_states"/>
         <remap from="~$(arg car_name)/car_pose" to="/$(arg car_name)/car_pose"/>
 
         <rosparam command="load" file="$(find mushr_sim)/config/mushr_sim.yaml" />

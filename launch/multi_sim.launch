@@ -46,14 +46,12 @@
             <rosparam param="car_names" subst_value="True">['$(arg car1_name)', '$(arg car2_name)']</rosparam>
 
             <remap from="~$(arg car1_name)/scan" to="/$(arg car1_name)/scan" />
-            <remap from="~$(arg car1_name)/joint_states" to="/$(arg car1_name)/joint_states"/>
             <remap from="~$(arg car1_name)/car_pose" to="/$(arg car1_name)/car_pose"/>
             <param name="$(arg car1_name)/initial_x" value="0"/>
             <param name="$(arg car1_name)/initial_y" value="0"/>
             <param name="$(arg car1_name)/initial_theta" value="0"/>
 
             <remap from="~$(arg car2_name)/scan" to="/$(arg car2_name)/scan" />
-            <remap from="~$(arg car2_name)/joint_states" to="/$(arg car2_name)/joint_states"/>
             <remap from="~$(arg car2_name)/car_pose" to="/$(arg car2_name)/car_pose"/>
             <param name="$(arg car2_name)/initial_x" value="0"/>
             <param name="$(arg car2_name)/initial_y" value="1"/>
