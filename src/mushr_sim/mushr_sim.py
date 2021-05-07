@@ -10,7 +10,7 @@ import tf2_ros
 from geometry_msgs.msg import PoseStamped
 from mushr_base import utils
 from mushr_sim.fake_urg import FakeURG
-from mushr_sim.motion_model import KinematicCarMotionModel
+from mushr_base.motion_model import KinematicCarMotionModel
 from mushr_sim.srv import CarPose
 from mushr_sim.utils import wrap_angle
 from nav_msgs.msg import Odometry
