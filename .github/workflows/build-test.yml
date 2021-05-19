@@ -24,7 +24,7 @@ jobs:
           wget http://packages.ros.org/ros.key -O - | apt-key add -
           apt-get update
           apt-get install python-catkin-tools -y
-          apt-get install python3-vcstool
+          apt-get install python3-vcstool -y
 
       - name: Setup Workspace 
         run: |
@@ -35,14 +35,13 @@ jobs:
 
       - name: Install MuSHR 
         run: |
-          bash -c "source /opt/ros/melodic/setup.bash &&
-                   apt install -y ros-melodic-ackermann-msgs ros-melodic-map-server ros-melodic-serial ros-melodic-urg-node ros-melodic-robot-state-publisher ros-melodic-xacro &&
-                   cd ~/catkin_ws/src && vcs import < repos.yaml &&
-                   mv ~/catkin_ws/src/mushr/mushr_hardware/realsense/realsense2_description ~/catkin_ws/src/mushr/mushr_hardware/realsense2_description &&
-                   rm -rf ~/catkin_ws/src/mushr/mushr_hardware/realsense &&
-                   pip install Cython &&
-                   cd ~/catkin_ws/src/range_libc/pywrapper &&
-                   python setup.py install &&
-                   cd ~/catkin_ws/src && rm -rf range_libc &&
-                   catkin build"
+          apt install -y ros-melodic-ackermann-msgs ros-melodic-map-server ros-melodic-serial ros-melodic-urg-node ros-melodic-robot-state-publisher ros-melodic-xacro
+          cd ~/catkin_ws/src && vcs import < repos.yaml
+          mv ~/catkin_ws/src/mushr/mushr_hardware/realsense/realsense2_description ~/catkin_ws/src/mushr/mushr_hardware/realsense2_description
+          rm -rf ~/catkin_ws/src/mushr/mushr_hardware/realsense
+          pip install Cython
+          cd ~/catkin_ws/src/range_libc/pywrapper
+          python setup.py install
+          cd ~/catkin_ws/src && rm -rf range_libc
+          bash -c "source /opt/ros/melodic/setup.bash && catkin build"
 
