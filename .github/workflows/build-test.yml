@@ -15,6 +15,9 @@ jobs:
       image: osrf/ros:melodic-desktop-full 
     steps:
       - name: Test ROS
+        with:
+          entrypoint: "/bin/bash"
         run: |
-          bash -c "source /opt/ros/melodic/setup.bash"
+          #bash -c "source /opt/ros/melodic/setup.bash"
+          source /opt/ros/melodic/setup.bash
           rosnode --help
