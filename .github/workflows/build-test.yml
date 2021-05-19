@@ -16,6 +16,5 @@ jobs:
     steps:
       - uses: ros-tooling/setup-ros@v0.1
         with:
-          required-ros-distributions: melodic dashing
-      - run: "source /opt/ros/dashing/setup.bash && ros2 run --help"
-      - run: "source /opt/ros/melodic/setup.bash && rosnode --help"
+          required-ros-distributions: melodic
+      - run: "/bin/bash /opt/ros/melodic/setup.bash && rosnode --help"
