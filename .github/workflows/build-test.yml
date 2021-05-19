@@ -18,5 +18,6 @@ jobs:
         with:
           required-ros-distributions: melodic
       - run: "bash /opt/ros/melodic/setup.bash"
+      - run: "apt install ros-melodic-rosbash"
       - run: "ls /opt/ros/melodic"
       - run: "rosnode --help"
