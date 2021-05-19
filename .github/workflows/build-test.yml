@@ -1,4 +1,5 @@
 # This workflow will install mushr stack and test the sim is functioning properly
+# The workflow unfortunately requires setup.bash be run in the same command as all other ros related things
 
 name: build-test 
 
@@ -14,14 +15,16 @@ jobs:
     container:
       image: osrf/ros:melodic-desktop-full 
     steps:
-      - name: Get catkin_tools
+      - name: Get catkin_tools vcstool
         run: |
           sh -c 'echo "deb http://packages.ros.org/ros/ubuntu `lsb_release -sc` main" > /etc/apt/sources.list.d/ros-latest.list'
+          apt-key adv --keyserver hkp://pool.sks-keyservers.net --recv-key 0xAB17C654
           apt-get update
           apt-get install wget
           wget http://packages.ros.org/ros.key -O - | apt-key add -
           apt-get update
           apt-get install python-catkin-tools -y
+          apt-get install python3-vcstool
 
       - name: Setup Workspace 
         run: |
@@ -32,4 +35,14 @@ jobs:
 
       - name: Install MuSHR 
         run: |
-          bash -c "source /opt/ros/melodic/setup.bash"
+          bash -c "source /opt/ros/melodic/setup.bash &&
+                   apt install -y ros-melodic-ackermann-msgs ros-melodic-map-server ros-melodic-serial ros-melodic-urg-node ros-melodic-robot-state-publisher ros-melodic-xacro &&
+                   cd ~/catkin_ws/src && vcs import < repos.yaml &&
+                   mv ~/catkin_ws/src/mushr/mushr_hardware/realsense/realsense2_description ~/catkin_ws/src/mushr/mushr_hardware/realsense2_description &&
+                   rm -rf ~/catkin_ws/src/mushr/mushr_hardware/realsense &&
+                   pip install Cython &&
+                   cd ~/catkin_ws/src/range_libc/pywrapper &&
+                   python setup.py install &&
+                   cd ~/catkin_ws/src && rm -rf range_libc &&
+                   catkin build"
+
