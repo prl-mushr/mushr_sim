@@ -12,12 +12,6 @@ jobs:
  build_docker:
     runs-on: ubuntu-latest
     container:
-      image: ubuntu:bionic
+      image: osrf/ros:melodic-desktop-full 
     steps:
-      - uses: ros-tooling/setup-ros@v0.1
-        with:
-          required-ros-distributions: melodic
-      - run: "bash /opt/ros/melodic/setup.bash"
-      - run: "apt install ros-melodic-rosbash"
-      - run: "ls /opt/ros/melodic"
       - run: "rosnode --help"
