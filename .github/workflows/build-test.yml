@@ -16,5 +16,5 @@ jobs:
     steps:
       - name: Test ROS
         run: |
-        bash -c "source /opt/ros/melodic/setup.bash"
-        rosnode --help
+          bash -c "source /opt/ros/melodic/setup.bash"
+          rosnode --help
