@@ -1,4 +1,7 @@
 # MuSHR Simulator
+
+[![build-test](https://github.com/prl-mushr/mushr_sim/actions/workflows/build-test.yml/badge.svg?branch=main)](https://github.com/prl-mushr/mushr_sim/actions)
+
 The MuSHR simulator is the easiest way to get started with MuSHR. The simulated car can be either controlled via keyboard teleoperation, or by a control algorithm. This simulator is designed to emulate the car's configuration as close as possible to reduce sim-to-real overhead. To do so, many of the hardware components are programmatically simulated (camera is not simulated).
 
 ### Tutorial

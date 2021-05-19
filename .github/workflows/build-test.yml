@@ -21,7 +21,7 @@ jobs:
           apt-get install wget
           wget http://packages.ros.org/ros.key -O - | apt-key add -
           apt-get update
-          apt-get install python-catkin-tools
+          apt-get install python-catkin-tools -y
 
       - name: Setup Workspace 
         run: |
