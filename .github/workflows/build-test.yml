@@ -4,9 +4,9 @@ name: build-test
 
 on:
  push:
-   branches: [ main ]
+   branches: [ main, development ]
  pull_request:
-   branches: [ main ]
+   branches: [ main, development ]
 
 jobs:
  build_docker:
