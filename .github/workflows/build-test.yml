@@ -17,4 +17,4 @@ jobs:
       - uses: ros-tooling/setup-ros@v0.1
         with:
           required-ros-distributions: melodic
-      - run: "/bin/bash /opt/ros/melodic/setup.bash && rosnode --help"
+      - run: "bash /opt/ros/melodic/setup.bash && rosnode --help"
