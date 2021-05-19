@@ -14,6 +14,7 @@ jobs:
     container:
       image: osrf/ros:melodic-desktop-full 
     steps:
-      - run: |
+      - name: Test ROS
+        run: |
         bash -c "source /opt/ros/melodic/setup.bash"
         rosnode --help
