@@ -19,4 +19,5 @@ jobs:
           #bash -c "source /opt/ros/melodic/setup.bash"
           echo "source /opt/ros/melodic/setup.bas" >> ~/.bashrc
           #source /opt/ros/melodic/setup.bash
-          rosnode --help
+          #rosnode --help
+      - run: rosnode --help
