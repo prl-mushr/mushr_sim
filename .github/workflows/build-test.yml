@@ -1,0 +1,21 @@
+# This workflow will install mushr stack and test the sim is functioning properly
+
+name: build-test 
+
+on:
+ push:
+   branches: [ main ]
+ pull_request:
+   branches: [ main ]
+
+jobs:
+ build_docker:
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:bionic
+    steps:
+      - uses: ros-tooling/setup-ros@v0.1
+        with:
+          required-ros-distributions: melodic dashing
+      - run: "source /opt/ros/dashing/setup.bash && ros2 run --help"
+      - run: "source /opt/ros/melodic/setup.bash && rosnode --help"
