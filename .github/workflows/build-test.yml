@@ -14,7 +14,8 @@ jobs:
     container:
       image: osrf/ros:melodic-desktop-full 
     steps:
-      - name: Test ROS
+      - name: Setup Workspace 
         run: |
           bash -c "source /opt/ros/melodic/setup.bash && 
-                   rosnode --help"
+                   mkdir -p ~/catkin_ws/src &&
+                   catkin build"
