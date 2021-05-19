@@ -1,6 +1,7 @@
 <launch>
 
     <arg name="car_name" default="car" />
+    <arg name="headless" default="False" />
 
     <!-- Could be racecar-mit, racecar-uw-tx2, or racecar-uw-nano -->
     <arg name="racecar_version" default="racecar-uw-nano" />
@@ -28,7 +29,7 @@
     </node>
 
 
-    <include file="$(find mushr_sim)/launch/keyboard_teleop.launch.xml" />
+    <include file="$(find mushr_sim)/launch/keyboard_teleop.launch.xml" unless="$(arg headless)"/>
 
 
     <group ns="mux">

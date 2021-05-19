@@ -1,0 +1,8 @@
+<!-- -*- mode: XML -*- -->
+<launch>
+    <include file="$(find mushr_sim)/launch/teleop.launch">
+        <arg name="headless" value="True"/>
+    </include>
+
+    <test test-name="test_sim" pkg="mushr_sim" type="test.py" />
+</launch>

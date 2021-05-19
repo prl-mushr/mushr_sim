@@ -13,6 +13,7 @@
   <build_depend>roscpp</build_depend>
   <build_depend>rospy</build_depend>
   <build_depend>std_msgs</build_depend>
+  <build_depend>rostest</build_depend>
   <build_export_depend>roscpp</build_export_depend>
   <build_export_depend>rospy</build_export_depend>
   <build_export_depend>std_msgs</build_export_depend>
@@ -23,7 +24,9 @@
   <exec_depend>tf</exec_depend>
   <exec_depend>tf2_ros</exec_depend>
   <exec_depend>mushr_base</exec_depend>
-  <exec_depend>vesc</exec_depend>
+  <exec_depend>vesc_ackermann</exec_depend>
+  <exec_depend>vesc_driver</exec_depend>
+  <exec_depend>vesc_msgs</exec_depend>
 
   <export>
   </export>
