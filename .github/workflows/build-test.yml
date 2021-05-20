@@ -14,11 +14,18 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        docker-image: [melodic_ci] #, noetic_ci]
+        docker-image: [melodic_ci, noetic_ci]
     container:
       # TODO switch this to personalrobotics/mushr
       image: schmittle/mushr:${{matrix.docker-image}}
     steps:
+      - name: Install ros-serial # must be installed from source for noetic
+        if: ${{matrix.docker-image == noetic_ci}}
+        run: |
+          cd /root/catkin_ws/src
+          git clone https://github.com/wjwwood/serial.git
+          bash -c "source /opt/ros/melodic/setup.bash && catkin build serial"
+
       - name: Install MuSHR 
         run: |
           cd /root/catkin_ws/src && wget https://mushr.io/tutorials/quickstart/repos.yaml && vcs import < repos.yaml
