@@ -25,7 +25,6 @@ jobs:
           apt-get update
           apt-get install python-catkin-tools -y
           apt-get install python3-vcstool -y
-          apt-get install curl -y
           curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
           python get-pip.py
 
