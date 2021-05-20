@@ -17,8 +17,7 @@ jobs:
       matrix:
         docker-image: [melodic_ci, noetic_ci]
     container:
-      # TODO switch this to personalrobotics/mushr
-      image: schmittle/mushr:${{matrix.docker-image}}
+      image: mushr/mushr:${{matrix.docker-image}}
     steps:
       - name: Install MuSHR Part 1
         run: |
