@@ -17,6 +17,7 @@ jobs:
     steps:
       - name: Install MuSHR 
         run: |
+          apt update
           apt install -y ros-melodic-ackermann-msgs ros-melodic-map-server ros-melodic-serial ros-melodic-urg-node ros-melodic-robot-state-publisher ros-melodic-xacro
           cd ~/catkin_ws/src && wget https://mushr.io/tutorials/quickstart/repos.yaml && vcs import < repos.yaml
           mv ~/catkin_ws/src/mushr/mushr_hardware/realsense/realsense2_description ~/catkin_ws/src/mushr/mushr_hardware/realsense2_description
