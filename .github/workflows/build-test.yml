@@ -36,4 +36,4 @@ jobs:
           git checkout ${GITHUB_REF#refs/heads/}
           git branch
 
-          bash -c "source /opt/ros/melodic/setup.bash && rostest mushr_sim teleop.test"
+          bash -c "source /opt/ros/melodic/setup.bash && catkin build mushr_sim && rostest mushr_sim teleop.test"
