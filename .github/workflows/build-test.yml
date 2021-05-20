@@ -26,6 +26,7 @@ jobs:
           rm -rf /root/catkin_ws/src/mushr/mushr_hardware/realsense
           pip install Cython
           cd /root/catkin_ws/src/range_libc/pywrapper
+          . /root/.bashrc
           python setup.py install
           cd /root/catkin_ws/src && rm -rf range_libc
           bash -c "source /opt/ros/melodic/setup.bash && catkin build"
