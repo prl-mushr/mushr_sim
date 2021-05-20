@@ -12,14 +12,15 @@ on:
 jobs:
  build_docker:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        docker-image: [melodic_ci] #, noetic_ci]
     container:
       # TODO switch this to personalrobotics/mushr
-      image: schmittle/mushr:bionic_ci # melodic + tools + catkin_ws
+      image: schmittle/mushr:${{docker-image}}
     steps:
       - name: Install MuSHR 
         run: |
-          apt update
-          apt install -y ros-melodic-ackermann-msgs ros-melodic-map-server ros-melodic-serial ros-melodic-urg-node ros-melodic-robot-state-publisher ros-melodic-xacro
           cd /root/catkin_ws/src && wget https://mushr.io/tutorials/quickstart/repos.yaml && vcs import < repos.yaml
           mv /root/catkin_ws/src/mushr/mushr_hardware/realsense/realsense2_description /root/catkin_ws/src/mushr/mushr_hardware/realsense2_description
           rm -rf /root/catkin_ws/src/mushr/mushr_hardware/realsense
