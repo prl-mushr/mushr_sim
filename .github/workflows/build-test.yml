@@ -26,22 +26,19 @@ jobs:
           rm -rf /root/catkin_ws/src/mushr/mushr_hardware/realsense
           pip install Cython
 
-      - name: Install range_libc melodic
-        if: ${{matrix.docker-image == 'melodic_ci'}}
+      - name: Install MuSHR Part 2 melodic
         run: |
           cd /root/catkin_ws/src/range_libc/pywrapper
           python setup.py install
+          cd /root/catkin_ws/src && rm -rf range_libc
+          bash -c "source /opt/ros/melodic/setup.bash && catkin build"
 
-      - name: Install range_libc noetic
-        if: ${{matrix.docker-image == 'noetic_ci'}}
+      - name: Install MuSHR Part 2 noetic 
         run: |
           cd /root/catkin_ws/src/range_libc/pywrapper
           python3 setup.py install
-
-      - name: Install MuSHR Part 2
-        run: |
           cd /root/catkin_ws/src && rm -rf range_libc
-          bash -c "source /opt/ros/melodic/setup.bash && catkin build"
+          bash -c "source /opt/ros/noetic/setup.bash && catkin build"
 
       - name: Run Tests 
         run: |
