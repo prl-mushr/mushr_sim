@@ -25,11 +25,11 @@ jobs:
           mv /root/catkin_ws/src/mushr/mushr_hardware/realsense/realsense2_description /root/catkin_ws/src/mushr/mushr_hardware/realsense2_description
           rm -rf /root/catkin_ws/src/mushr/mushr_hardware/realsense
           pip install Cython
-        if: ${{matrix.docker-image==melodic_ci}}
+        if: ${{matrix.docker-image == 'melodic_ci'}}
         run: |
           cd /root/catkin_ws/src/range_libc/pywrapper
           python setup.py install
-        if: ${{matrix.docker-image==noetic_ci}}
+        if: ${{matrix.docker-image == 'noetic_ci'}}
         run: |
           cd /root/catkin_ws/src/range_libc/pywrapper
           python3 setup.py install
