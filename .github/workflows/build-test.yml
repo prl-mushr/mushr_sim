@@ -31,7 +31,9 @@ jobs:
 
       - name: Run Tests 
         run: |
-          cd /root/catkin_ws/src/mushr_sim && git fetch origin ${GITHUB_REF#refs/heads/} && git checkout ${GITHUB_HEAD_REF#refs/heads/}
+          cd /root/catkin_ws/src/mushr_sim 
+          git fetch origin ${GITHUB_REF#refs/heads/} 
+          git checkout ${GITHUB_REF#refs/heads/}
           git branch
 
           bash -c "source /opt/ros/melodic/setup.bash && rostest mushr_sim teleop.test"
