@@ -20,7 +20,7 @@ jobs:
       image: schmittle/mushr:${{matrix.docker-image}}
     steps:
       - name: Install ros-serial # must be installed from source for noetic
-        if: ${{matrix.docker-image == noetic_ci}}
+        if: ${{matrix.docker-image == 'noetic_ci'}}
         run: |
           cd /root/catkin_ws/src
           git clone https://github.com/wjwwood/serial.git
