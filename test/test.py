@@ -25,7 +25,7 @@ class TestIntegration(unittest.TestCase):
         """Constructor"""
         super(TestIntegration, self).__init__(*args)
         self.car_pose = None
-        self.scan_avg = None
+        self.scan_avg = -1 
         rospy.init_node("car_pose_tester", anonymous=True)
         rospy.Subscriber("/car/car_pose", PoseStamped, self.pose_callback)
         rospy.Subscriber("/car/scan", LaserScan, self.scan_callback)

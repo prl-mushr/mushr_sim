@@ -13,6 +13,7 @@ jobs:
  build_docker:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false # run both tests completely regardless if one fails
       matrix:
         docker-image: [melodic_ci, noetic_ci]
     container:
