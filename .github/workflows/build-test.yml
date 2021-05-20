@@ -28,3 +28,5 @@ jobs:
           cd /root/catkin_ws/src && rm -rf range_libc
           bash -c "source /opt/ros/melodic/setup.bash && catkin build"
 
+      - name: Run Tests 
+        run: bash -c "source /opt/ros/melodic/setup.bash && rostest mushr_sim teleop.test"
