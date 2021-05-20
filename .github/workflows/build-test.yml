@@ -15,7 +15,7 @@ jobs:
     container:
       image: osrf/ros:melodic-desktop-full 
     steps:
-      - name: Get catkin_tools vcstool
+      - name: Get catkin_tools vcstool and pip
         run: |
           sh -c 'echo "deb http://packages.ros.org/ros/ubuntu `lsb_release -sc` main" > /etc/apt/sources.list.d/ros-latest.list'
           apt-key adv --keyserver hkp://pool.sks-keyservers.net --recv-key 0xAB17C654
@@ -25,6 +25,10 @@ jobs:
           apt-get update
           apt-get install python-catkin-tools -y
           apt-get install python3-vcstool -y
+          apt-get install curl -y
+          curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+          python get-pip.py
+
 
       - name: Setup Workspace 
         run: |
