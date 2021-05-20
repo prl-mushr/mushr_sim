@@ -27,6 +27,7 @@ jobs:
           pip install Cython
 
       - name: Install MuSHR Part 2 melodic
+        if: ${{matrix.docker-image == 'melodic_ci'}}
         run: |
           cd /root/catkin_ws/src/range_libc/pywrapper
           python setup.py install
@@ -34,6 +35,7 @@ jobs:
           bash -c "source /opt/ros/melodic/setup.bash && catkin build"
 
       - name: Install MuSHR Part 2 noetic 
+        if: ${{matrix.docker-image == 'noetic_ci'}}
         run: |
           cd /root/catkin_ws/src/range_libc/pywrapper
           python3 setup.py install
