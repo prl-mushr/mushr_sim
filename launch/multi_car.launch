@@ -1,0 +1,3 @@
+<launch>
+    <node name="launchcars" pkg="mushr_sim" type="multi_car.py" />
+</launch>
