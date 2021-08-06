@@ -1,7 +1,7 @@
 <launch>
 
-    <arg name="car1_name" default="car1" />
-    <arg name="car2_name" default="car2" />
+    <arg name="car1_name" default="car0" />
+    <arg name="car2_name" default="car1" />
 
     <!-- Set to 1 if you want to run the map_server -->
     <arg name="map_server" value = "1"/>

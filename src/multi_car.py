@@ -3,11 +3,12 @@
 import rospy
 import roslaunch
 import sys
+rospy.init_node("launchcars")
 uuid = roslaunch.rlutil.get_or_generate_uuid(None, False)
 roslaunch.configure_logging(uuid)
 
 #number of cars
-n=2
+n = rospy.get_param("~num_cars")
 
 launches = []
 mapserver = 1

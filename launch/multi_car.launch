@@ -1,3 +1,5 @@
 <launch>
-    <node name="launchcars" pkg="mushr_sim" type="multi_car.py" />
+    <node name="launchcars" pkg="mushr_sim" type="multi_car.py">
+        <param name="num_cars" type="int" value="2"/>
+    </node>
 </launch>
