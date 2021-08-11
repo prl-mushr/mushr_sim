@@ -2,10 +2,10 @@
 <launch>
 
     <!-- Set to 1 if you want to run the map_server -->
-    <arg name="map_server" value = "1" />
+    <arg name="map_server" default="1" />
 
     <arg name="car_name" default="car" />
-
+	<arg name="racecar_color" default="" />
     <!-- Launch  map server-->
     <group if="$(arg map_server)">
         <include file="$(find mushr_base)/launch/includes/map_server.launch" />
@@ -22,7 +22,7 @@
             <!-- The colors of the racecar, should be of the form "-<platform_color>-<inset_color>" -->
             <!-- An empty string will result in the default URDF -->
               <!-- Check CMakeLists.txt of mushr_description for appropriate values -->
-            <arg name="racecar_color" value="" />
+            <arg name="racecar_color" value="$(arg racecar_color)" />
 
             <arg name="car_name" value="$(arg car_name)" />
          </include>
