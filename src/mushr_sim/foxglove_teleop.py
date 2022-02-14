@@ -22,14 +22,15 @@ class FoxgloveTeleop:
         )
 
     def drive_cb(self, msg):
-        x = msg.linear.x
-        z = msg.linear.z
-
         ack = AckermannDriveStamped()
         ack.header = std_msgs.msg.Header()
         ack.header.stamp = rospy.Time.now()
         ack.header.frame_id = "map"
 
+        x = msg.linear.x
+        z = msg.linear.z
+
+        # x and z dictate the directions
         cmd_up = x == 1
         cmd_down = x == -1
         cmd_left = z == -1
