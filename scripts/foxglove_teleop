@@ -15,7 +15,6 @@ class TeleopThread(Thread):
         super(TeleopThread, self).__init__()
 
     def run(self):
-        # Temporarily disable keyboard repeats
         self.teleop = FoxgloveTeleop()
 
     def shutdown(self):
@@ -31,7 +30,6 @@ def main():
     # Spin the main thread
     rospy.spin()
     # We either got SIGINT from control-C or ROS is otherwise coming down.
-    # Kill the GUI on the way out
     teleop_thread.teleop.shutdown()
 
 
