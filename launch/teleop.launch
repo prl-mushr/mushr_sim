@@ -3,6 +3,18 @@
 
     <!-- Set to 1 if you want to run the map_server -->
     <arg name="map_server" value = "1" />
+    <!-- Set to 1 if you want to use foxglove teleop inputs instead of keyboard teleop -->
+    <arg name="foxglove_teleop" value = "1" />
+    <!-- Set to 1 if you want to use keyboard teleop inputs instead of foxglove teleop -->
+    <arg name="keyboard_teleop" value = "0" />
+
+    <!-- Start up websocket for docker container foxglove -->
+    <group if="$(arg foxglove_teleop)">
+        <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" > 
+            <arg name="port" value="9090"/>
+        </include>
+    </group>
+
     <!-- We take a map path either as an environment variable or an argument.
          The environment variable has precedence. -->
     <arg name="_env_map" default="$(optenv MAP)" />
@@ -31,6 +43,10 @@
         <!-- An empty string will result in the default URDF -->
           <!-- Check CMakeLists.txt of mushr_description for appropriate values -->
         <arg name="racecar_color" value="" />
+
+        <arg name="foxglove_teleop" value="$(arg foxglove_teleop)" />
+        <arg name="keyboard_teleop" value="$(arg keyboard_teleop)" />
+
         <arg name="fake_localization" value="$(arg fake_localization)" />
         <arg name="initial_x" value="$(arg initial_x)"/>
         <arg name="initial_y" value="$(arg initial_y)"/>

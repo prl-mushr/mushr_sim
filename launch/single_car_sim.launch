@@ -6,6 +6,8 @@
     <arg name="initial_x" default="0"/>
     <arg name="initial_y" default="0"/>
     <arg name="initial_theta" default="0"/>
+    <arg name="foxglove_teleop" default="1" />
+    <arg name="keyboard_teleop" default="0" />
 
     <!-- Could be racecar-mit, racecar-uw-tx2, or racecar-uw-nano -->
     <arg name="racecar_version" default="racecar-uw-nano" />
@@ -22,6 +24,8 @@
             <arg name="racecar_color" value="$(arg racecar_color)" />
             <arg name="use_tf_prefix" value="$(arg use_tf_prefix)" />
             <arg name="teleop" value="$(arg teleop)" />
+            <arg name="foxglove_teleop" value="$(arg foxglove_teleop)" />
+            <arg name="keyboard_teleop" value="$(arg keyboard_teleop)" />
         </include>
     </group>
 
