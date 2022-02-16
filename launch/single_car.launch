@@ -4,6 +4,8 @@
     <arg name="use_tf_prefix" default="true" />
     <arg name="fake_localization" default="true" />
     <arg name="teleop" default="true" />
+    <arg name="foxglove_teleop" default="1" />
+    <arg name="keyboard_teleop" default="0" />
 
     <!-- Could be racecar-mit, racecar-uw-tx2, or racecar-uw-nano -->
     <arg name="racecar_version" default="racecar-uw-nano" />
@@ -35,7 +37,13 @@
         <param name="robot_description" value="/$(arg car_name)/robot_description" />
     </node>
 
-    <include if="$(arg teleop)" file="$(find mushr_sim)/launch/keyboard_teleop.launch.xml" />
+    <group if="$(arg foxglove_teleop)">
+        <include file="$(find mushr_sim)/launch/foxglove_teleop.launch.xml" />
+    </group>
+
+    <group if="$(arg keyboard_teleop)">
+        <include file="$(find mushr_sim)/launch/keyboard_teleop.launch.xml" />
+    </group>
 
     <group ns="mux">
         <!-- Spawn MUXs -->

@@ -1,0 +1,37 @@
+#!/usr/bin/python3
+
+# Copyright (c) 2019, The Personal Robotics Lab, The MuSHR Team, The Contributors of MuSHR
+# License: BSD 3-Clause. See LICENSE.md file in root directory.
+
+import os
+import atexit
+import rospy
+from threading import Thread
+from mushr_sim.foxglove_teleop import FoxgloveTeleop
+
+
+class TeleopThread(Thread):
+    def __init__(self):
+        super(TeleopThread, self).__init__()
+
+    def run(self):
+        self.teleop = FoxgloveTeleop()
+
+    def shutdown(self):
+        self.teleop.root.quit()
+        super(TeleopThread, self).shutdown()
+
+
+def main():
+    rospy.init_node("foxglove_teleop")
+
+    teleop_thread = TeleopThread()
+    teleop_thread.start()
+    # Spin the main thread
+    rospy.spin()
+    # We either got SIGINT from control-C or ROS is otherwise coming down.
+    teleop_thread.teleop.shutdown()
+
+
+if __name__ == "__main__":
+    main()
