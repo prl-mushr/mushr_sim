@@ -18,7 +18,7 @@
     <!-- We take a map path either as an environment variable or an argument.
          The environment variable has precedence. -->
     <arg name="_env_map" default="$(optenv MAP)" />
-    <arg name="map" default="$(find mushr_sim)/maps/sandbox.yaml"/>
+    <arg name="map" default="$(find mushr_sim)/maps/real-floor0.yaml"/>
     <arg name="car_name" default="car" />
     <arg name="use_tf_prefix" default="true" />
     <arg name="fake_localization" default="true" />
@@ -52,6 +52,10 @@
         <arg name="initial_y" value="$(arg initial_y)"/>
         <arg name="initial_theta" value="$(arg initial_theta)"/>
         <arg name="use_tf_prefix" value="$(arg use_tf_prefix)" />
+        <arg name="car_name" value="$(arg car_name)" />
+     </include>
+
+     <include file="$(find mushr_sim)/launch/nav_msg_converter.launch">
         <arg name="car_name" value="$(arg car_name)" />
      </include>
 

@@ -1,0 +1,17 @@
+<!-- -*- mode: XML -*- -->
+<launch>
+  <arg name="start_topic" default="/initialpose" />
+  <arg name="goal_topic" default="/move_base_simple/goal" />
+  <arg name="car_name" default="car" />
+  <arg name="point_topic" default="/clicked_point" />
+  <arg name="type_topic" default="/foxglove/click_type" />
+
+  <!-- <node pkg="nav_msg_converter" type="nav_msg_converter_node" name="nav_msg_converter_node" /> -->
+  <node pkg="mushr_sim" type="nav_msg_converter" name="nav_msg_converter">
+    <param name="car_name" value="$(arg car_name)" />
+    <param name="start_topic" value="/$(arg car_name)$(arg start_topic)" />
+    <param name="goal_topic" value="$(arg goal_topic)" />
+    <param name="point_topic" value="$(arg point_topic)" />
+    <param name="type_topic" value="$(arg type_topic)" />
+  </node>
+</launch>
