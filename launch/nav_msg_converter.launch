@@ -1,9 +1,10 @@
 <!-- -*- mode: XML -*- -->
 <launch>
   <arg name="start_topic" default="/initialpose" />
+  <arg name="estimate_topic" default="/pose_estimate" />
   <arg name="goal_topic" default="/move_base_simple/goal" />
   <arg name="car_name" default="car" />
-  <arg name="point_topic" default="/clicked_point" />
+  <arg name="pose_topic" default="/foxglove/pose_stamped" />
   <arg name="type_topic" default="/foxglove/click_type" />
 
   <!-- <node pkg="nav_msg_converter" type="nav_msg_converter_node" name="nav_msg_converter_node" /> -->
@@ -11,7 +12,8 @@
     <param name="car_name" value="$(arg car_name)" />
     <param name="start_topic" value="/$(arg car_name)$(arg start_topic)" />
     <param name="goal_topic" value="$(arg goal_topic)" />
-    <param name="point_topic" value="$(arg point_topic)" />
+    <param name="pose_topic" value="$(arg pose_topic)" />
+    <param name="estimate_topic" value="$(arg estimate_topic)" />
     <param name="type_topic" value="$(arg type_topic)" />
   </node>
 </launch>
