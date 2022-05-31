@@ -36,10 +36,6 @@ class NavMsgConverter:
     """
     Take a pose stamped message and save it.
     """
-    # print(type(pose_msg))
-    # rospy.loginfo(str(type(pose_msg)))
-    # self.pose = PoseStamped(header = pose_msg.header)
-    # self.pose.pose = pose_msg.pose.pose
     self.pose = pose_msg
   
   def save_type(self, type_msg: String) -> None:
