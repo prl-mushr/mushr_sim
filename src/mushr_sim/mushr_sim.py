@@ -249,7 +249,7 @@ class SimulatedCar:
     def publish_updated_transforms(self, transform, changes):
         cur_pose = PoseStamped()
         cur_pose.header.frame_id = "map"
-        cur_pose.header.stamp = transform.header.stamp
+        cur_pose.header.stamp = transform.header.stamp - rospy.Duration(.5) # for visualization purposes, delay header stamp
         cur_pose.pose.position.x = (
                 self.odom_to_base_trans[0] + self.map_to_odom_trans[0]
         )
