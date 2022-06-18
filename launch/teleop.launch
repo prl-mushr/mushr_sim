@@ -3,6 +3,7 @@
 
     <!-- Set to 1 if you want to run the map_server -->
     <arg name="map_server" value = "1" />
+    <arg name="nav_msg_converter" value = "1" />
     <!-- Set to 1 if you want to use foxglove teleop inputs instead of keyboard teleop -->
     <arg name="foxglove_teleop" value = "1" />
     <!-- Set to 1 if you want to use keyboard teleop inputs instead of foxglove teleop -->
@@ -30,6 +31,12 @@
     <group if="$(arg map_server)">
         <include file="$(find mushr_sim)/launch/map_server.launch">
             <arg name="map" value="$(eval _env_map if _env_map else map)" />
+        </include>
+    </group>
+
+    <!-- Launch  nav msg converter-->
+    <group if="$(arg nav_msg_converter)">
+        <include file="$(find mushr_base)/launch/includes/nav_msg_converter.launch">
         </include>
     </group>
 
