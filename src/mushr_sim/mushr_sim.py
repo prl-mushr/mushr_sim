@@ -34,7 +34,7 @@ class SimulatedCar:
         self.speed_to_erpm_offset = speed_to_erpm_offset
         self.speed_to_erpm_gain = speed_to_erpm_gain
         # The most recent transform from odom to base_footprint
-        self.odom_to_base_trans = np.array([x, y], dtype=np.float)
+        self.odom_to_base_trans = np.array([x, y], dtype=float)
         self.odom_to_base_trans = np.nan_to_num(self.odom_to_base_trans)
         self.odom_to_base_rot = np.nan_to_num(theta)
         self.odom_to_base_lock = Lock()
@@ -50,7 +50,7 @@ class SimulatedCar:
         self.last_steering_angle_lock = Lock()
 
         # Internal transform from the map to odom
-        self.map_to_odom_trans = np.array([0, 0], dtype=np.float)
+        self.map_to_odom_trans = np.array([0, 0], dtype=float)
         self.map_to_odom_rot = 0
         self.map_to_odom_lock = Lock()
 
@@ -99,7 +99,7 @@ class SimulatedCar:
          """
         # Get the pose of the car w.r.t the map in meters
         rx_trans = np.array(
-            [msg.pose.position.x, msg.pose.position.y], dtype=np.float
+            [msg.pose.position.x, msg.pose.position.y], dtype=float
         )
         rx_rot = utils.quaternion_to_angle(msg.pose.orientation)
 
@@ -141,7 +141,7 @@ class SimulatedCar:
 
     def reposition(self, x, y, theta):
         rx_trans = np.array(
-            [x, y], dtype=np.float
+            [x, y], dtype=float
         )
         rx_rot = theta
 
@@ -162,7 +162,7 @@ class SimulatedCar:
             self.odom_to_base_rot = rx_rot
 
         with self.odom_to_base_lock:
-            self.odom_to_base_trans = np.array([x, y], dtype=np.float)
+            self.odom_to_base_trans = np.array([x, y], dtype=float)
             self.odom_to_base_rot = theta
 
     def simulate(self, dt, now):
@@ -183,7 +183,7 @@ class SimulatedCar:
                     self.odom_to_base_trans[1],
                     self.odom_to_base_rot,
                 ],
-                dtype=np.float,
+                dtype=float,
             )
 
             state_changes, joint_changes = self.motion_model.apply_motion_model(new_pose[np.newaxis, ...],
@@ -194,7 +194,7 @@ class SimulatedCar:
             in_bounds = True
             if self.permissible_region is not None:
                 # Compute the new pose w.r.t the map in meters
-                new_map_pose = np.zeros(3, dtype=np.float)
+                new_map_pose = np.zeros(3, dtype=float)
                 new_map_pose[0] = self.map_to_odom_trans[0] + (
                         new_pose[0] * np.cos(self.map_to_odom_rot)
                         - new_pose[1] * np.sin(self.map_to_odom_rot)

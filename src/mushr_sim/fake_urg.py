@@ -53,7 +53,7 @@ class FakeURG:
         self.ranges = np.zeros(len(self.angles) * 1, dtype=np.float32)
 
     def noise_laser_scan(self, ranges):
-        indices = np.zeros(ranges.shape[0], dtype=np.int)
+        indices = np.zeros(ranges.shape[0], dtype=int)
         prob_sum = self.z_hit + self.z_rand + self.z_short
         hit_count = int((self.z_hit / prob_sum) * indices.shape[0])
         rand_count = int((self.z_rand / prob_sum) * indices.shape[0])
