@@ -10,9 +10,13 @@
     <arg name="keyboard_teleop" value = "0" />
 
     <!-- Start up websocket for docker container foxglove -->
+    <arg name="_rosbridge_port" default="$(optenv ROSBRIDGE_PORT)" />
+    <arg name="_rosbridge_websocket_external_port" default="$(optenv ROSBRIDGE_WEBSOCKET_EXTERNAL_PORT)" />
+
     <group if="$(arg foxglove_teleop)">
-        <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" > 
-            <arg name="port" value="9090"/>
+        <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" >
+            <arg name="port" value="$(eval _rosbridge_port if _rosbridge_port else 9090)"/>
+            <arg name="websocket_external_port" value="$(eval _rosbridge_websocket_external_port if _rosbridge_websocket_external_port else None)"/>
         </include>
     </group>
 
